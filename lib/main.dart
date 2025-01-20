@@ -11,9 +11,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(
     GetMaterialApp(
-      title: "Application",
+      title: "Presence App",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     ),
