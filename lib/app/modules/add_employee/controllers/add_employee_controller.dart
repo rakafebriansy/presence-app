@@ -64,6 +64,8 @@ class AddEmployeeController extends GetxController with ErrorBags {
 
       String uid = credential.user!.uid;
 
+      await credential.user!.sendEmailVerification();
+
       await FirebaseFirestore.instance.collection('employees').add({
         'identification_number': identification_numberC.text,
         'email': emailC.text,
