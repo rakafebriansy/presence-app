@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:presence_app/app/helper/custom_styles.dart';
 
 import '../controllers/add_employee_controller.dart';
 
@@ -45,12 +46,8 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
                 controller.add();
               },
               child: Text('Submit'),
-              style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(Colors.blue),
-                  foregroundColor: WidgetStatePropertyAll(Colors.white),
-                  shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)))),
-            )
+              style: CustomStyles.primaryButton(),
+            ),
           ],
         ));
   }

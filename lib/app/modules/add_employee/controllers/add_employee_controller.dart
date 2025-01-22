@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:presence_app/app/errors/error_bags.dart';
 import 'package:presence_app/app/errors/validation_error.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:presence_app/app/helper/validators.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AddEmployeeController extends GetxController {
-  final List<String> errorBags = [];
+class AddEmployeeController extends GetxController with ErrorBags {
   late TextEditingController nameC;
   late TextEditingController identification_numberC;
   late TextEditingController emailC;
-
-  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   void onInit() {
@@ -31,7 +29,9 @@ class AddEmployeeController extends GetxController {
     super.onClose();
   }
 
-  void _checkFormValidity() {
+  @override
+  void checkFormValidity() {
+    super.checkFormValidity();
     String? errName = Validators.validateName(this.nameC.text);
     if (errName != null) {
       errorBags.add(errName);
@@ -49,10 +49,9 @@ class AddEmployeeController extends GetxController {
 
   void add() async {
     try {
-      this._checkFormValidity();
-      if (this.errorBags.length > 0) {
-        throw ValidationError(errorBags);
-      }
+      this.checkFormValidity();
+      this.errorCheck();
+
       final UserCredential credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: this.emailC.text,
@@ -87,7 +86,6 @@ class AddEmployeeController extends GetxController {
     } on ValidationError catch (error) {
       print(error.toString());
       Get.snackbar('Failed to add new employee!', error.getMessage());
-      this.errorBags.clear();
     } catch (error) {
       print(error);
       Get.snackbar('Internal Server Error!', 'Call the developer.');

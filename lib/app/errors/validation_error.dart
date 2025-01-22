@@ -5,7 +5,7 @@ class ValidationError implements Exception {
   @override
   String toString() => 'InvalidAgeException: ${errorBags.toString()}';
 
-  String getMessage() => this.errorBags.length > 0
+  String getMessage() => this.errorBags.length > 1
       ? errorBags[0] + " and ${this.errorBags.length} other errors."
       : errorBags[0];
 }

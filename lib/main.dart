@@ -15,7 +15,7 @@ void main() async {
   runApp(
     GetMaterialApp(
       title: "Presence App",
-      initialRoute: AppPages.INITIAL,
+      initialRoute: Routes.LOGIN,
       getPages: AppPages.routes,
     ),
   );

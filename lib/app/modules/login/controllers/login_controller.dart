@@ -1,0 +1,73 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:presence_app/app/errors/error_bags.dart';
+import 'package:presence_app/app/errors/validation_error.dart';
+import 'package:presence_app/app/helper/validators.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:presence_app/app/routes/app_pages.dart';
+
+class LoginController extends GetxController with ErrorBags {
+  late TextEditingController emailC;
+  late TextEditingController passwordC;
+
+  @override
+  void checkFormValidity() {
+    super.checkFormValidity();
+    String? errEmail = Validators.validateEmail(this.emailC.text);
+    if (errEmail != null) {
+      errorBags.add(errEmail);
+    }
+    String? errPassword = Validators.validateName(this.passwordC.text);
+    if (errPassword != null) {
+      errorBags.add(errPassword);
+    }
+  }
+
+  void login() async {
+    try {
+      this.checkFormValidity();
+      this.errorCheck();
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailC.text, password: passwordC.text);
+
+      if (credential.user == null) {
+        throw new ValidationError(['User is not found.']);
+      } else if (!credential.user!.emailVerified) {
+        throw new ValidationError(['Please verify your account first.']);
+      }
+
+      Get.offAllNamed(Routes.HOME);
+    } on FirebaseAuthException catch (error) {
+      print(error);
+      if (error.code == 'user-not-found' ||
+          error.code == 'wrong-password' ||
+          error.code == 'invalid-credential') {
+        Get.snackbar('Failed to login!', 'Invalid Credentials.');
+      }
+    } on ValidationError catch (error) {
+      print(error.toString());
+      Get.snackbar('Failed to login!', error.getMessage());
+    } catch (error) {
+      print(error);
+      Get.snackbar('Internal Server Error!', 'Call the developer.');
+    }
+  }
+
+  @override
+  void onInit() {
+    this.emailC = TextEditingController();
+    this.passwordC = TextEditingController();
+
+    super.onInit();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+  }
+}

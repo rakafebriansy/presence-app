@@ -13,7 +13,7 @@ class Validators {
     if (value == null || value.isEmpty) {
       return 'Please enter your identification number';
     }
-    if (value.length < 3) {
+    if (value.length != 12) {
       return 'Identification number must be 12 characters long';
     }
     return null;
@@ -27,6 +27,13 @@ class Validators {
     RegExp regExp = RegExp(pattern);
     if (!regExp.hasMatch(value)) {
       return 'Please enter a valid email address';
+    }
+    return null;
+  }
+
+  static String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your password';
     }
     return null;
   }
