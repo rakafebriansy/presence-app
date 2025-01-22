@@ -18,6 +18,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
           padding: EdgeInsets.all(20),
           children: [
             TextField(
+              autocorrect: false,
               controller: controller.identification_numberC,
               decoration: InputDecoration(
                   labelText: 'ID Number', border: OutlineInputBorder()),
@@ -26,6 +27,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
               height: 20,
             ),
             TextField(
+              autocorrect: false,
               controller: controller.nameC,
               decoration: InputDecoration(
                   labelText: 'Name', border: OutlineInputBorder()),
@@ -34,6 +36,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
               height: 20,
             ),
             TextField(
+              autocorrect: false,
               controller: controller.emailC,
               decoration: InputDecoration(
                   labelText: 'Email', border: OutlineInputBorder()),

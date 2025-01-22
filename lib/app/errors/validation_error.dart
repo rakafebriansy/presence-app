@@ -1,11 +1,11 @@
 class ValidationError implements Exception {
-  final List<String> errorBags;
-  ValidationError(this.errorBags);
+  final List<String> _errorBags;
+  ValidationError(this._errorBags);
 
   @override
-  String toString() => 'InvalidAgeException: ${errorBags.toString()}';
+  String toString() => 'ValidationError: ${_errorBags.toString()}';
 
-  String getMessage() => this.errorBags.length > 1
-      ? errorBags[0] + " and ${this.errorBags.length} other errors."
-      : errorBags[0];
+  String getMessage() => this._errorBags.length > 1
+      ? _errorBags[0] + " and ${this._errorBags.length} other errors."
+      : _errorBags[0];
 }

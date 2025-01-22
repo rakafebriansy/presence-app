@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:presence_app/app/errors/call_to_action_error.dart';
 import 'package:presence_app/app/errors/error_bags.dart';
 import 'package:presence_app/app/errors/validation_error.dart';
 import 'package:presence_app/app/helper/validators.dart';
@@ -33,7 +34,20 @@ class LoginController extends GetxController with ErrorBags {
       if (credential.user == null) {
         throw new ValidationError(['User is not found.']);
       } else if (!credential.user!.emailVerified) {
-        throw new ValidationError(['Please verify your account first.']);
+        throw new CallToActionError(
+            title: 'Please verify your account first.',
+            description: 'Click \'resend\' to re-send your verification email.',
+            callback: () async {
+              try {
+                await credential.user!.sendEmailVerification();
+                Get.back();
+                Get.snackbar('Successfully re-sent email verification!',
+                    'Check your email inbox.');
+              } catch (error) {
+                throw error;
+              }
+            },
+            onSubmitText: 'RESEND');
       }
 
       Get.offAllNamed(Routes.HOME);
@@ -47,6 +61,8 @@ class LoginController extends GetxController with ErrorBags {
     } on ValidationError catch (error) {
       print(error.toString());
       Get.snackbar('Failed to login!', error.getMessage());
+    } on CallToActionError catch (error) {
+      error.getDialog();
     } catch (error) {
       print(error);
       Get.snackbar('Internal Server Error!', 'Call the developer.');
