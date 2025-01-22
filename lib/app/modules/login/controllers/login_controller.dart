@@ -49,8 +49,12 @@ class LoginController extends GetxController with ErrorBags {
             },
             onSubmitText: 'RESEND');
       }
-
-      Get.offAllNamed(Routes.HOME);
+      
+      if(passwordC.text == 'password') {
+        Get.offAllNamed(Routes.NEW_PASSWORD);
+      } else {
+        Get.offAllNamed(Routes.HOME);
+      }
     } on FirebaseAuthException catch (error) {
       print(error);
       if (error.code == 'user-not-found' ||
@@ -65,7 +69,7 @@ class LoginController extends GetxController with ErrorBags {
       error.getDialog();
     } catch (error) {
       print(error);
-      Get.snackbar('Internal Server Error!', 'Call the developer.');
+      Get.snackbar('Internal Server Error!', 'Contact our customer service.');
     }
   }
 

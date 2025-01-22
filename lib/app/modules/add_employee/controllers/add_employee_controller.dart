@@ -90,7 +90,7 @@ class AddEmployeeController extends GetxController with ErrorBags {
       Get.snackbar('Failed to add new employee!', error.getMessage());
     } catch (error) {
       print(error);
-      Get.snackbar('Internal Server Error!', 'Call the developer.');
+      Get.snackbar('Internal Server Error!', 'Contact our customer service.');
     }
   }
 }

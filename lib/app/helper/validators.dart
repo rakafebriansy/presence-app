@@ -37,4 +37,27 @@ class Validators {
     }
     return null;
   }
+
+  static String? validateNewPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your password';
+    }
+    if (value == 'password') {
+      return 'Using \'password\' as password is prohibited';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+    return null;
+  }
+
+  static String? validateConfirmPassword(String? value, String? confirm) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your confirm password';
+    }
+    if (value != confirm) {
+      return 'Confirm password doesn\'t match';
+    }
+    return null;
+  }
 }
