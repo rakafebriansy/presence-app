@@ -31,7 +31,7 @@ class HomeView extends GetView<HomeController> {
       floatingActionButton: FloatingActionButton(onPressed: () {
         Get.defaultDialog(
             title: 'LOG OUT',
-            middleText: 'Afe you sure wan\'t to log out?',
+            middleText: 'Are you sure wan\'t to log out?',
             actions: [
               OutlinedButton(
                   onPressed: () async {

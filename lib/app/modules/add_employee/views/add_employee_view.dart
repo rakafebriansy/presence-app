@@ -19,7 +19,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
           children: [
             TextField(
               autocorrect: false,
-              controller: controller.identification_numberC,
+              controller: controller.identificationNumberC,
               decoration: InputDecoration(
                   labelText: 'ID Number', border: OutlineInputBorder()),
             ),
@@ -46,9 +46,27 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
             ),
             ElevatedButton(
               onPressed: () {
-                controller.add();
+                Get.defaultDialog(
+                    title: 'ADD EMPLOYEE',
+                    middleText: 'Please make sure that you\'re an admin.',
+                    content: TextField(
+                      autocorrect: false,
+                      obscureText: true,
+                      controller: controller.adminPasswordC,
+                      decoration: InputDecoration(
+                          labelText: 'Password', border: OutlineInputBorder()),
+                    ),
+                    actions: [
+                      OutlinedButton(
+                          onPressed: () async {
+                            await controller.add();
+                          },
+                          child: Text('SUBMIT')),
+                      OutlinedButton(
+                          onPressed: () => Get.back(), child: Text('CANCEL'))
+                    ]);
               },
-              child: Text('Submit'),
+              child: Text('SUBMIT'),
               style: CustomStyles.primaryButton(),
             ),
           ],

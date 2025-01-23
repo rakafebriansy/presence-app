@@ -8,14 +8,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddEmployeeController extends GetxController with ErrorBags {
   late TextEditingController nameC;
-  late TextEditingController identification_numberC;
+  late TextEditingController identificationNumberC;
   late TextEditingController emailC;
+  late TextEditingController adminPasswordC;
 
   @override
   void onInit() {
     this.nameC = TextEditingController();
-    this.identification_numberC = TextEditingController();
+    this.identificationNumberC = TextEditingController();
     this.emailC = TextEditingController();
+    this.adminPasswordC = TextEditingController();
     super.onInit();
   }
 
@@ -32,6 +34,11 @@ class AddEmployeeController extends GetxController with ErrorBags {
   @override
   void checkFormValidity() {
     super.checkFormValidity();
+    String? errAdminPassword =
+        Validators.validatePassword(this.adminPasswordC.text);
+    if (errAdminPassword != null) {
+      errorBags.add(errAdminPassword);
+    }
     String? errName = Validators.validateName(this.nameC.text);
     if (errName != null) {
       errorBags.add(errName);
@@ -41,19 +48,26 @@ class AddEmployeeController extends GetxController with ErrorBags {
       errorBags.add(errEmail);
     }
     String? errIdentificationNumber = Validators.validateIdentificationNumber(
-        this.identification_numberC.text);
+        this.identificationNumberC.text);
     if (errIdentificationNumber != null) {
       errorBags.add(errIdentificationNumber);
     }
   }
 
-  void add() async {
+  Future<void> add() async {
     try {
       this.checkFormValidity();
       this.errorCheck();
 
-      final UserCredential credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final String email = auth.currentUser!.email!;
+
+      await auth.signInWithEmailAndPassword(
+        email: email,
+        password: adminPasswordC.text,
+      );
+
+      UserCredential credential = await auth.createUserWithEmailAndPassword(
         email: this.emailC.text,
         password: 'password',
       );
@@ -67,13 +81,18 @@ class AddEmployeeController extends GetxController with ErrorBags {
       await credential.user!.sendEmailVerification();
 
       await FirebaseFirestore.instance.collection('employees').add({
-        'identification_number': identification_numberC.text,
+        'identification_number': identificationNumberC.text,
         'email': emailC.text,
         'name': nameC.text,
         'uid': uid,
         'created_at': DateTime.now().toIso8601String()
       });
 
+      await auth.signOut();
+
+      await auth.signInWithEmailAndPassword(
+          email: email, password: adminPasswordC.text);
+      Get.back();
       Get.snackbar('Successfully added new employee!',
           '${nameC.text} was added into database.');
     } on FirebaseAuthException catch (error) {
@@ -84,6 +103,9 @@ class AddEmployeeController extends GetxController with ErrorBags {
       } else if (error.code == 'email-already-in-use') {
         Get.snackbar('Failed to add new employee!',
             'The account already exists for that email.');
+      } else if (error.code == 'user-not-found' ||
+          error.code == 'invalid-credential') {
+        Get.snackbar('Failed to login!', 'Invalid Credentials.');
       }
     } on ValidationError catch (error) {
       print(error.toString());
