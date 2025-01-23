@@ -36,16 +36,31 @@ class LoginView extends GetView<LoginController> {
             SizedBox(
               height: 30,
             ),
-            ElevatedButton(
-                onPressed: () {
-                  controller.login();
-                },
-                child: Text("LOGIN"),
-                style: CustomStyles.primaryButton()),
-            TextButton(
-                onPressed: () {
-                },
-                child: Text('Forgot Password?'))
+            Obx(
+              () => ElevatedButton(
+                  onPressed: () {
+                    if (controller.isLoading.isFalse) {
+                      controller.login();
+                    }
+                  },
+                  child: controller.isLoading.isFalse
+                      ? Text('LOGIN')
+                      : Flex(
+                          direction: Axis.horizontal,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('LOGGING IN'),
+                            SizedBox(width: 8,),
+                            SizedBox(
+                              height: 10,
+                              width: 10,
+                              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2,),
+                            )
+                          ],
+                        ),
+                  style: CustomStyles.primaryButton()),
+            ),
+            TextButton(onPressed: () {}, child: Text('Forgot Password?'))
           ],
         ));
   }

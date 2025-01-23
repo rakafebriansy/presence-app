@@ -44,30 +44,54 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
             SizedBox(
               height: 30,
             ),
-            ElevatedButton(
-              onPressed: () {
-                Get.defaultDialog(
-                    title: 'ADD EMPLOYEE',
-                    middleText: 'Please make sure that you\'re an admin.',
-                    content: TextField(
-                      autocorrect: false,
-                      obscureText: true,
-                      controller: controller.adminPasswordC,
-                      decoration: InputDecoration(
-                          labelText: 'Password', border: OutlineInputBorder()),
-                    ),
-                    actions: [
-                      OutlinedButton(
-                          onPressed: () async {
-                            await controller.add();
-                          },
-                          child: Text('SUBMIT')),
-                      OutlinedButton(
-                          onPressed: () => Get.back(), child: Text('CANCEL'))
-                    ]);
-              },
-              child: Text('SUBMIT'),
-              style: CustomStyles.primaryButton(),
+            Obx(
+              () => ElevatedButton(
+                onPressed: () {
+                  Get.defaultDialog(
+                      title: 'ADD EMPLOYEE',
+                      middleText: 'Please make sure that you\'re an admin.',
+                      content: TextField(
+                        autocorrect: false,
+                        obscureText: true,
+                        controller: controller.adminPasswordC,
+                        decoration: InputDecoration(
+                            labelText: 'Password',
+                            border: OutlineInputBorder()),
+                      ),
+                      actions: [
+                        OutlinedButton(
+                            onPressed: () async {
+                              if (controller.isLoading.isFalse) {
+                                await controller.add();
+                              }
+                            },
+                            child: Text('SUBMIT')),
+                        OutlinedButton(
+                            onPressed: () => Get.back(), child: Text('CANCEL'))
+                      ]);
+                },
+                child: controller.isLoading.isFalse
+                    ? Text('SUBMIT')
+                    : Flex(
+                        direction: Axis.horizontal,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('SUBMITTING'),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          SizedBox(
+                            height: 10,
+                            width: 10,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        ],
+                      ),
+                style: CustomStyles.primaryButton(),
+              ),
             ),
           ],
         ));

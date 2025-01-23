@@ -7,6 +7,7 @@ import 'package:presence_app/app/helper/validators.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddEmployeeController extends GetxController with ErrorBags {
+  RxBool isLoading = false.obs;
   late TextEditingController nameC;
   late TextEditingController identificationNumberC;
   late TextEditingController emailC;
@@ -55,6 +56,8 @@ class AddEmployeeController extends GetxController with ErrorBags {
   }
 
   Future<void> add() async {
+    this.isLoading.value = true;
+    Get.back();
     try {
       this.checkFormValidity();
       this.errorCheck();
@@ -113,6 +116,8 @@ class AddEmployeeController extends GetxController with ErrorBags {
     } catch (error) {
       print(error);
       Get.snackbar('Internal Server Error!', 'Contact our customer service.');
+    } finally {
+      this.isLoading.value = false;
     }
   }
 }

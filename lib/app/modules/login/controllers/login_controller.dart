@@ -10,6 +10,7 @@ import 'package:presence_app/app/routes/app_pages.dart';
 class LoginController extends GetxController with ErrorBags {
   late TextEditingController emailC;
   late TextEditingController passwordC;
+  RxBool isLoading = false.obs;
 
   @override
   void checkFormValidity() {
@@ -25,6 +26,7 @@ class LoginController extends GetxController with ErrorBags {
   }
 
   void login() async {
+    this.isLoading.value = true;
     try {
       this.checkFormValidity();
       this.errorCheck();
@@ -49,8 +51,8 @@ class LoginController extends GetxController with ErrorBags {
             },
             onSubmitText: 'RESEND');
       }
-      
-      if(passwordC.text == 'password') {
+
+      if (passwordC.text == 'password') {
         Get.offAllNamed(Routes.NEW_PASSWORD);
       } else {
         Get.offAllNamed(Routes.HOME);
@@ -70,6 +72,8 @@ class LoginController extends GetxController with ErrorBags {
     } catch (error) {
       print(error);
       Get.snackbar('Internal Server Error!', 'Contact our customer service.');
+    } finally {
+      this.isLoading.value = false;
     }
   }
 

@@ -1,9 +1,23 @@
 import 'package:get/get.dart';
 
-class HomeController extends GetxController {
-  //TODO: Implement HomeController
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:presence_app/app/routes/app_pages.dart';
 
-  final count = 0.obs;
+class HomeController extends GetxController {
+  RxBool isLoading = false.obs;
+
+  void logout() async {
+    this.isLoading.value = true;
+    try {
+      await FirebaseAuth.instance.signOut();
+      Get.offAllNamed(Routes.LOGIN);
+    } catch (error) {
+      Get.snackbar('Internal Server Error', 'Contact our customer service..');
+    } finally {
+      this.isLoading.value = false;
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -18,6 +32,4 @@ class HomeController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }
