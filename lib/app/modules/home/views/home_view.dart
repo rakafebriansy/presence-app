@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -27,6 +28,20 @@ class HomeView extends GetView<HomeController> {
           style: TextStyle(fontSize: 20),
         ),
       ),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Get.defaultDialog(
+            title: 'LOG OUT',
+            middleText: 'Afe you sure wan\'t to log out?',
+            actions: [
+              OutlinedButton(
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Get.offAllNamed(Routes.LOGIN);
+                  },
+                  child: Text('LOGOUT')),
+              OutlinedButton(onPressed: () => Get.back(), child: Text('CANCEL'))
+            ]);
+      }, child: Icon(Icons.logout),),
     );
   }
 }
