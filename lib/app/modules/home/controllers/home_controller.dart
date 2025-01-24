@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,12 +6,6 @@ import 'package:presence_app/app/routes/app_pages.dart';
 class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  Stream<DocumentSnapshot<Map<String, dynamic>>> watchingRole() async* {
-    String uid = auth.currentUser!.uid;
-    yield* firestore.collection('employees').doc(uid).snapshots();
-  }
 
   void logout() async {
     this.isLoading.value = true;
