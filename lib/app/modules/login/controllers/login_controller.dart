@@ -79,10 +79,9 @@ class LoginController extends GetxController with ErrorBags {
 
   @override
   void onInit() {
+    super.onInit();
     this.emailC = TextEditingController();
     this.passwordC = TextEditingController();
-
-    super.onInit();
   }
 
   @override

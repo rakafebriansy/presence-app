@@ -48,8 +48,8 @@ class ForgotPasswordController extends GetxController with ErrorBags {
 
   @override
   void onInit() {
-    this.emailC = TextEditingController();
     super.onInit();
+    this.emailC = TextEditingController();
   }
 
   @override

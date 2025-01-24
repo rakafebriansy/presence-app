@@ -62,12 +62,12 @@ class ProfileView extends GetView<ProfileController> {
                         height: 20,
                       ),
                       ListTile(
-                        onTap: () {},
+                        onTap: () => Get.toNamed(Routes.UPDATE_PROFILE),
                         leading: Icon(Icons.person),
                         title: Text('Update Profile'),
                       ),
                       ListTile(
-                        onTap: () {},
+                        onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
                         leading: Icon(Icons.vpn_key),
                         title: Text('Update Password'),
                       ),
@@ -104,9 +104,17 @@ class ProfileView extends GetView<ProfileController> {
                   );
                 }
               }
+              if (snapshot.hasError || snapshot.data == null) {
+                return Center(
+                  child: Text(
+                    'No data available.',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                );
+              }
               return Center(
                 child: Text(
-                  'There\'s no data.',
+                  'Internal Server Error.',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               );

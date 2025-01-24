@@ -15,11 +15,11 @@ class AddEmployeeController extends GetxController with ErrorBags {
 
   @override
   void onInit() {
+    super.onInit();
     this.nameC = TextEditingController();
     this.identificationNumberC = TextEditingController();
     this.emailC = TextEditingController();
     this.adminPasswordC = TextEditingController();
-    super.onInit();
   }
 
   @override
