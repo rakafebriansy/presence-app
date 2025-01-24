@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:presence_app/app/helper/custom_styles.dart';
+import 'package:presence_app/app/routes/app_pages.dart';
 
 import '../controllers/login_controller.dart';
 
@@ -60,7 +61,7 @@ class LoginView extends GetView<LoginController> {
                         ),
                   style: CustomStyles.primaryButton()),
             ),
-            TextButton(onPressed: () {}, child: Text('Forgot Password?'))
+            TextButton(onPressed: () => Get.toNamed(Routes.FORGOT_PASSWORD), child: Text('Forgot Password?'))
           ],
         ));
   }
