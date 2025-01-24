@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -14,11 +15,28 @@ class HomeView extends GetView<HomeController> {
         title: const Text('HomeView'),
         centerTitle: true,
         actions: [
+          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              stream: controller.watchingRole(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.waiting) {
+                  if (snapshot.data != null && snapshot.data!.data() != null) {
+                    String role = snapshot.data!.data()!['role'];
+                    if (role == 'admin') {
+                      return IconButton(
+                          onPressed: () {
+                            Get.toNamed(Routes.ADD_EMPLOYEE);
+                          },
+                          icon: Icon(Icons.add));
+                    }
+                  }
+                }
+                return SizedBox();
+              }),
           IconButton(
               onPressed: () {
-                Get.toNamed(Routes.ADD_EMPLOYEE);
+                Get.toNamed(Routes.PROFILE);
               },
-              icon: Icon(Icons.person))
+              icon: Icon(Icons.person)),
         ],
       ),
       body: const Center(

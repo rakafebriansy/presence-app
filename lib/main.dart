@@ -19,7 +19,6 @@ void main() async {
     // appleProvider: AppleProvider.appAttest,
   );
   
-
   runApp(
     StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
