@@ -57,6 +57,7 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GetBuilder<UpdateProfileController>(builder: (controller) {
+                  print(controller.pickedImage);
                   if (controller.pickedImage != null) {
                     return Container(
                       height: 100,

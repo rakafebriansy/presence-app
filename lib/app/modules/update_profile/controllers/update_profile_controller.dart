@@ -18,8 +18,7 @@ class UpdateProfileController extends GetxController with ErrorBags {
 
   void pickImage() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {}
+   this.pickedImage = await picker.pickImage(source: ImageSource.gallery);
     update();
   }
 
