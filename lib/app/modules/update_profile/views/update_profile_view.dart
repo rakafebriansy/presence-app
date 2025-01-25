@@ -42,6 +42,25 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
                   labelText: 'ID Number', border: OutlineInputBorder()),
             ),
             SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Profile Image',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                controller.image != null
+                    ? Text('Profile')
+                    : Text('no choosen.'),
+                TextButton(onPressed: () {}, child: Text('choose'))
+              ],
+            ),
+            SizedBox(
               height: 30,
             ),
             Obx(

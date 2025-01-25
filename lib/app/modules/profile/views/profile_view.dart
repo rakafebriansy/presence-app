@@ -16,7 +16,7 @@ class ProfileView extends GetView<ProfileController> {
           centerTitle: true,
         ),
         body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            stream: controller.watchingUsers(),
+            stream: controller.watchingUser(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -26,6 +26,8 @@ class ProfileView extends GetView<ProfileController> {
               if (snapshot.hasData) {
                 Map<String, dynamic>? user = snapshot.data!.data();
                 if (user != null) {
+                  String defaultImage =
+                      'https://ui-avatars.com/api/?name=${user['name']}';
                   return ListView(
                     padding: EdgeInsets.all(20),
                     children: [
@@ -37,7 +39,9 @@ class ProfileView extends GetView<ProfileController> {
                               width: 100,
                               height: 100,
                               child: Image.network(
-                                'https://ui-avatars.com/api/?name=${user['name']}',
+                                user['image'] != null && user['image'] != ''
+                                    ? user['image']
+                                    : defaultImage,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -104,7 +108,7 @@ class ProfileView extends GetView<ProfileController> {
                   );
                 }
               }
-              
+
               if (snapshot.hasError || snapshot.data == null) {
                 return Center(
                   child: Text(
@@ -113,7 +117,7 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                 );
               }
-              
+
               return Center(
                 child: Text(
                   'Internal Server Error.',

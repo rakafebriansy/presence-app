@@ -6,7 +6,7 @@ import 'package:presence_app/app/routes/app_pages.dart';
 class ProfileController extends GetxController {
   RxBool isLoading = false.obs;
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> watchingUsers() async* {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> watchingUser() async* {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     yield* FirebaseFirestore.instance.collection('employees').doc(uid).snapshots();
   }

@@ -11,6 +11,7 @@ class UpdateProfileController extends GetxController with ErrorBags {
   late TextEditingController nameC;
   late TextEditingController emailC;
   late TextEditingController identificationNumberC;
+  String? image;
 
   @override
   void checkFormValidity() {
@@ -86,6 +87,7 @@ class UpdateProfileController extends GetxController with ErrorBags {
         this.nameC.text = data['name'];
         this.emailC.text = data['email'];
         this.identificationNumberC.text = data['identification_number'];
+        this.image = data['image'] ?? null;
         return;
       }
     }
