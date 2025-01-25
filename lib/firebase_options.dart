@@ -3,7 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
 /// Example:
@@ -40,8 +40,8 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD-zWDAntdsgS2H52W7TnGsGyg1CsvL0og',
+  static final FirebaseOptions web = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_WEB_API_KEY']!,
     appId: '1:961803445314:web:60cfcc7279f360507b79db',
     messagingSenderId: '961803445314',
     projectId: 'presence-app-9a958',
@@ -50,16 +50,16 @@ class DefaultFirebaseOptions {
     measurementId: 'G-VZFTQB5EYD',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCHUGrk7y2gYs8jT7paRKmUp3kmfQAk4pw',
+  static final FirebaseOptions android = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_ANDROID_API_KEY']!,
     appId: '1:961803445314:android:4251a81fca8dd1e67b79db',
     messagingSenderId: '961803445314',
     projectId: 'presence-app-9a958',
     storageBucket: 'presence-app-9a958.firebasestorage.app',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAyJLEY-YpeL-UCESiE8eoQH1AqcxBa3aY',
+  static final FirebaseOptions ios = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_IOS_API_KEY']!,
     appId: '1:961803445314:ios:dd85c22b9b8ad2817b79db',
     messagingSenderId: '961803445314',
     projectId: 'presence-app-9a958',
@@ -67,8 +67,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.rakafebriansy.presenceApp',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAyJLEY-YpeL-UCESiE8eoQH1AqcxBa3aY',
+  static final FirebaseOptions macos = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_IOS_API_KEY']!,
     appId: '1:961803445314:ios:dd85c22b9b8ad2817b79db',
     messagingSenderId: '961803445314',
     projectId: 'presence-app-9a958',
@@ -76,8 +76,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.rakafebriansy.presenceApp',
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyD-zWDAntdsgS2H52W7TnGsGyg1CsvL0og',
+  static final FirebaseOptions windows = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_WEB_API_KEY']!,
     appId: '1:961803445314:web:93b6fb9c615bf6937b79db',
     messagingSenderId: '961803445314',
     projectId: 'presence-app-9a958',

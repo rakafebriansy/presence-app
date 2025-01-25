@@ -1,5 +1,6 @@
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:get/get.dart';
 
@@ -10,15 +11,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseAppCheck.instance.activate(
-    webProvider: ReCaptchaV3Provider('6LcX38EqAAAAABXPGVh_uEdzAsveN3Lokpeb9lcb'),
+    webProvider:
+        ReCaptchaV3Provider('6LcX38EqAAAAABXPGVh_uEdzAsveN3Lokpeb9lcb'),
     androidProvider: AndroidProvider.debug,
-    // appleProvider: AppleProvider.appAttest,
+    appleProvider: AppleProvider.appAttest,
   );
-  
+
+
   runApp(
     StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
