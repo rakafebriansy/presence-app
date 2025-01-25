@@ -12,9 +12,6 @@ class UpdateProfileController extends GetxController with ErrorBags {
   late TextEditingController emailC;
   late TextEditingController identificationNumberC;
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-
   @override
   void checkFormValidity() {
     super.checkFormValidity();
@@ -39,19 +36,19 @@ class UpdateProfileController extends GetxController with ErrorBags {
       this.checkFormValidity();
       this.errorCheck();
 
-      String uid = await auth.currentUser!.uid;
+      String uid = await FirebaseAuth.instance.currentUser!.uid;
 
-      await firestore.collection('employees').doc(uid).update({
+      await FirebaseFirestore.instance.collection('employees').doc(uid).update({
         'name': this.nameC.text,
         'identification_number': this.identificationNumberC.text
       });
 
       Get.back();
-      Get.snackbar('Successfully update profile!',
-          'Your profile is updated.');
+      Get.snackbar('Successfully update profile!', 'Your profile is updated.');
     } on FirebaseException catch (error) {
       print(error);
       // TODO
+      throw error;
     } on ValidationError catch (error) {
       print(error.toString());
       Get.snackbar('Failed to update profile!', error.getMessage());
@@ -80,9 +77,9 @@ class UpdateProfileController extends GetxController with ErrorBags {
   }
 
   Future<void> _loadUserData() async {
-    String uid = auth.currentUser!.uid;
+    String uid = FirebaseAuth.instance.currentUser!.uid;
     DocumentSnapshot<Map<String, dynamic>> user =
-        await firestore.collection('employees').doc(uid).get();
+        await FirebaseFirestore.instance.collection('employees').doc(uid).get();
     if (user.exists) {
       Map<String, dynamic>? data = user.data();
       if (data != null) {

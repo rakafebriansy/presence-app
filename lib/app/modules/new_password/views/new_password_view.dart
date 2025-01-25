@@ -24,7 +24,9 @@ class NewPasswordView extends GetView<NewPasswordController> {
               decoration: InputDecoration(
                   labelText: 'New Password', border: OutlineInputBorder()),
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             TextField(
               obscureText: true,
               controller: controller.confirmPasswordC,
@@ -33,13 +35,38 @@ class NewPasswordView extends GetView<NewPasswordController> {
                   labelText: 'Confirm New Password',
                   border: OutlineInputBorder()),
             ),
-            SizedBox(height: 30,),
-            ElevatedButton(
-              onPressed: () {
-                controller.setPassword();
-              },
-              child: Text('SUBMIT'),
-              style: CustomStyles.primaryButton(),
+            SizedBox(
+              height: 30,
+            ),
+            Obx(
+              () => ElevatedButton(
+                onPressed: () {
+                  if (controller.isLoading.isFalse) {
+                    controller.setPassword();
+                  }
+                },
+                child: controller.isLoading.isFalse
+                    ? Text('SUBMIT')
+                    : Flex(
+                        direction: Axis.horizontal,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('SUBMITTING'),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          SizedBox(
+                            height: 10,
+                            width: 10,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        ],
+                      ),
+                style: CustomStyles.primaryButton(),
+              ),
             )
           ],
         ));

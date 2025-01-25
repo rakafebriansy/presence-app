@@ -8,9 +8,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 
 class LoginController extends GetxController with ErrorBags {
+  RxBool isLoading = false.obs;
   late TextEditingController emailC;
   late TextEditingController passwordC;
-  RxBool isLoading = false.obs;
 
   @override
   void checkFormValidity() {

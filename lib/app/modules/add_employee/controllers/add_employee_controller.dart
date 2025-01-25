@@ -91,8 +91,6 @@ class AddEmployeeController extends GetxController with ErrorBags {
         'created_at': DateTime.now().toIso8601String()
       });
 
-      await auth.signOut();
-
       await auth.signInWithEmailAndPassword(
           email: email, password: adminPasswordC.text);
       Get.back();

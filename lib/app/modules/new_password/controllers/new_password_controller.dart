@@ -7,10 +7,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 
 class NewPasswordController extends GetxController with ErrorBags {
+  RxBool isLoading = false.obs;
   late TextEditingController passwordC;
   late TextEditingController confirmPasswordC;
 
   void setPassword() async {
+    this.isLoading.value = true;
     try {
       final auth = FirebaseAuth.instance;
       this.checkFormValidity();
@@ -32,11 +34,11 @@ class NewPasswordController extends GetxController with ErrorBags {
     } on FirebaseAuthException catch (error) {
       print(error);
       if (error.code == 'weak-password') {
-        Get.snackbar('Failed to change password!',
-            'The password provided is too weak.');
-      } else if (error.code == 'invalid-password') {
         Get.snackbar(
-            'Failed to change password!', 'Password must be at least 6 characters long.');
+            'Failed to change password!', 'The password provided is too weak.');
+      } else if (error.code == 'invalid-password') {
+        Get.snackbar('Failed to change password!',
+            'Password must be at least 6 characters long.');
       }
     } on ValidationError catch (error) {
       print(error.toString());
@@ -44,6 +46,8 @@ class NewPasswordController extends GetxController with ErrorBags {
     } catch (error) {
       print(error);
       Get.snackbar('Internal Server Error!', 'Contact our customer service.');
+    } finally {
+      this.isLoading.value = false;
     }
   }
 

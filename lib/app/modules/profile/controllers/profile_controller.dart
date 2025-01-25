@@ -5,18 +5,16 @@ import 'package:presence_app/app/routes/app_pages.dart';
 
 class ProfileController extends GetxController {
   RxBool isLoading = false.obs;
-  FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> watchingUsers() async* {
-    String uid = auth.currentUser!.uid;
-    yield* firestore.collection('employees').doc(uid).snapshots();
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    yield* FirebaseFirestore.instance.collection('employees').doc(uid).snapshots();
   }
 
     void logout() async {
     this.isLoading.value = true;
     try {
-      await auth.signOut();
+      await FirebaseAuth.instance.signOut();
       Get.offAllNamed(Routes.LOGIN);
     } catch (error) {
       Get.snackbar('Internal Server Error', 'Contact our customer service..');

@@ -47,15 +47,17 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
             Obx(
               () => ElevatedButton(
                 onPressed: () {
-                  controller.updateProfile();
+                  if (controller.isLoading.isFalse) {
+                    controller.updateProfile();
+                  }
                 },
                 child: controller.isLoading.isFalse
-                    ? Text('SUBMIT')
+                    ? Text('UPDATE')
                     : Flex(
                         direction: Axis.horizontal,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('SUBMITTING'),
+                          Text('UPDATING'),
                           SizedBox(
                             width: 8,
                           ),

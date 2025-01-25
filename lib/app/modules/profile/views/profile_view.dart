@@ -104,6 +104,7 @@ class ProfileView extends GetView<ProfileController> {
                   );
                 }
               }
+              
               if (snapshot.hasError || snapshot.data == null) {
                 return Center(
                   child: Text(
@@ -112,6 +113,7 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                 );
               }
+              
               return Center(
                 child: Text(
                   'Internal Server Error.',

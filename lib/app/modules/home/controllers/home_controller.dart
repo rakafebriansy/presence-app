@@ -5,12 +5,11 @@ import 'package:presence_app/app/routes/app_pages.dart';
 
 class HomeController extends GetxController {
   RxBool isLoading = false.obs;
-  FirebaseAuth auth = FirebaseAuth.instance;
 
   void logout() async {
     this.isLoading.value = true;
     try {
-      await auth.signOut();
+      await FirebaseAuth.instance.signOut();
       Get.offAllNamed(Routes.LOGIN);
     } catch (error) {
       Get.snackbar('Internal Server Error', 'Contact our customer service..');
