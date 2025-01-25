@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -54,10 +56,33 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                controller.image != null
-                    ? Text('Profile')
-                    : Text('no choosen.'),
-                TextButton(onPressed: () {}, child: Text('choose'))
+                GetBuilder<UpdateProfileController>(builder: (controller) {
+                  if (controller.pickedImage != null) {
+                    return Container(
+                      height: 100,
+                      width: 100,
+                      child: Image.file(
+                        File(controller.pickedImage!.path),
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  } else if (controller.image != null) {
+                    return Container(
+                      height: 100,
+                      width: 100,
+                      child: Image.network(
+                        controller.image!,
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  }
+                  return Text('no choosen.');
+                }),
+                TextButton(
+                    onPressed: () {
+                      controller.pickImage();
+                    },
+                    child: Text('choose'))
               ],
             ),
             SizedBox(

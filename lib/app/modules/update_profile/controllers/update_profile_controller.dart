@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:presence_app/app/errors/error_bags.dart';
 import 'package:presence_app/app/errors/validation_error.dart';
 import 'package:presence_app/app/helper/validators.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UpdateProfileController extends GetxController with ErrorBags {
   RxBool isLoading = false.obs;
@@ -12,6 +13,15 @@ class UpdateProfileController extends GetxController with ErrorBags {
   late TextEditingController emailC;
   late TextEditingController identificationNumberC;
   String? image;
+
+  XFile? pickedImage;
+
+  void pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {}
+    update();
+  }
 
   @override
   void checkFormValidity() {
@@ -88,6 +98,7 @@ class UpdateProfileController extends GetxController with ErrorBags {
         this.emailC.text = data['email'];
         this.identificationNumberC.text = data['identification_number'];
         this.image = data['image'] ?? null;
+        update();
         return;
       }
     }
