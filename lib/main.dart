@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:get/get.dart';
+import 'package:presence_app/app/controllers/page_handling_controller.dart';
 
 import 'app/routes/app_pages.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,6 +23,7 @@ void main() async {
     appleProvider: AppleProvider.appAttest,
   );
 
+  Get.put(PageHandlingController(), permanent: true);
 
   runApp(
     StreamBuilder<User?>(

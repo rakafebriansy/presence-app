@@ -1,13 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:presence_app/app/controllers/page_handling_controller.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
-  const ProfileView({super.key});
+  ProfileView({super.key});
+  final pageC = Get.find<PageHandlingController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,6 +128,16 @@ class ProfileView extends GetView<ProfileController> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               );
-            }));
+            }),
+        bottomNavigationBar: ConvexAppBar(
+          style: TabStyle.fixedCircle,
+          items: [
+            TabItem(icon: Icons.home, title: 'Home'),
+            TabItem(icon: Icons.fingerprint, title: 'Presence'),
+            TabItem(icon: Icons.person, title: 'Profile'),
+          ],
+          initialActiveIndex: 2,
+          onTap: (int i) => pageC.changePage(i),
+        ));
   }
 }

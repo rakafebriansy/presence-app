@@ -26,10 +26,10 @@ class AppPages {
 
   static final routes = [
     GetPage(
-      name: _Paths.HOME,
-      page: () => const HomeView(),
-      binding: HomeBinding(),
-    ),
+        name: _Paths.HOME,
+        page: () => HomeView(),
+        binding: HomeBinding(),
+        transition: Transition.fadeIn),
     GetPage(
       name: _Paths.ADD_EMPLOYEE,
       page: () => const AddEmployeeView(),
@@ -51,10 +51,10 @@ class AppPages {
       binding: ForgotPasswordBinding(),
     ),
     GetPage(
-      name: _Paths.PROFILE,
-      page: () => const ProfileView(),
-      binding: ProfileBinding(),
-    ),
+        name: _Paths.PROFILE,
+        page: () => ProfileView(),
+        binding: ProfileBinding(),
+        transition: Transition.fadeIn),
     GetPage(
       name: _Paths.UPDATE_PROFILE,
       page: () => const UpdateProfileView(),
