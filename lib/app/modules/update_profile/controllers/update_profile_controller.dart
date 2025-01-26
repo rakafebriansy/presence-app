@@ -126,11 +126,11 @@ class UpdateProfileController extends GetxController with ErrorBags {
   }
 
   Future<void> _loadUserData() async {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    DocumentSnapshot<Map<String, dynamic>> user =
+    final String uid = FirebaseAuth.instance.currentUser!.uid;
+    final DocumentSnapshot<Map<String, dynamic>> user =
         await FirebaseFirestore.instance.collection('employees').doc(uid).get();
     if (user.exists) {
-      Map<String, dynamic>? data = user.data();
+      final Map<String, dynamic>? data = user.data();
       if (data != null) {
         this.nameC.text = data['name'];
         this.emailC.text = data['email'];
