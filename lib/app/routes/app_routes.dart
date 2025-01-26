@@ -15,6 +15,7 @@ abstract class Routes {
   static const ATTENDANCE_DETAIL = _Paths.ATTENDANCE_DETAIL;
   static const ATTENDANCE_ALL = _Paths.ATTENDANCE_ALL;
   static const ATTENDANCES = _Paths.ATTENDANCES;
+  static const MY_ATTENDANCES = _Paths.MY_ATTENDANCES;
 }
 
 abstract class _Paths {
@@ -31,4 +32,5 @@ abstract class _Paths {
   static const ATTENDANCE_DETAIL = '/attendance-detail';
   static const ATTENDANCE_ALL = '/attendance-all';
   static const ATTENDANCES = '/attendances';
+  static const MY_ATTENDANCES = '/my-attendances';
 }

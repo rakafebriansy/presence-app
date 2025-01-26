@@ -143,7 +143,11 @@ class HomeView extends GetView<HomeController> {
                           'Last 5 days',
                           style: TextStyle(),
                         ),
-                        TextButton(onPressed: () {}, child: Text('See more')),
+                        TextButton(
+                            onPressed: () {
+                              Get.toNamed(Routes.MY_ATTENDANCES);
+                            },
+                            child: Text('See more')),
                       ],
                     ),
                     ListView.builder(

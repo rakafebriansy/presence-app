@@ -4,14 +4,14 @@ import '../modules/add_employee/bindings/add_employee_binding.dart';
 import '../modules/add_employee/views/add_employee_view.dart';
 import '../modules/attendance_detail/bindings/attendance_detail_binding.dart';
 import '../modules/attendance_detail/views/attendance_detail_view.dart';
-import '../modules/attendances/bindings/attendances_binding.dart';
-import '../modules/attendances/views/attendances_view.dart';
 import '../modules/forgot_password/bindings/forgot_password_binding.dart';
 import '../modules/forgot_password/views/forgot_password_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/my_attendances/bindings/my_attendances_binding.dart';
+import '../modules/my_attendances/views/my_attendances_view.dart';
 import '../modules/new_password/bindings/new_password_binding.dart';
 import '../modules/new_password/views/new_password_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
@@ -75,9 +75,9 @@ class AppPages {
       binding: AttendanceDetailBinding(),
     ),
     GetPage(
-      name: _Paths.ATTENDANCES,
-      page: () => const AttendancesView(),
-      binding: AttendancesBinding(),
+      name: _Paths.MY_ATTENDANCES,
+      page: () => const MyAttendancesView(),
+      binding: MyAttendancesBinding(),
     ),
   ];
 }
