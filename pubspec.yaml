@@ -44,6 +44,7 @@ dependencies:
   image_picker: ^1.1.2
   firebase_storage: ^12.4.1
   convex_bottom_bar: ^3.2.0
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
