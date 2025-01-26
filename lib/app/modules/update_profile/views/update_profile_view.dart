@@ -57,7 +57,6 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GetBuilder<UpdateProfileController>(builder: (controller) {
-                  print(controller.pickedImage);
                   if (controller.pickedImage != null) {
                     return Container(
                       height: 100,
@@ -79,11 +78,39 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
                   }
                   return Text('no choosen.');
                 }),
-                TextButton(
-                    onPressed: () {
-                      controller.pickImage();
-                    },
-                    child: Text('choose'))
+                GetBuilder<UpdateProfileController>(builder: (controller) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      if (controller.image != null)
+                        IconButton(
+                            onPressed: () {
+                              Get.defaultDialog(
+                                  title: 'DELETE IMAGE',
+                                  middleText:
+                                      'Are you sure wan\'t to delete your image?.',
+                                  actions: [
+                                    OutlinedButton(
+                                        onPressed: () => Get.back(),
+                                        child: Text('CANCEL')),
+                                    OutlinedButton(
+                                        onPressed: () async {
+                                          if (controller.isLoading.isFalse) {
+                                            controller.deleteImageProfile();
+                                          }
+                                        },
+                                        child: Text('DELETE')),
+                                  ]);
+                            },
+                            icon: Icon(Icons.delete)),
+                      IconButton(
+                          onPressed: () {
+                            controller.pickImage();
+                          },
+                          icon: Icon(Icons.edit))
+                    ],
+                  );
+                })
               ],
             ),
             SizedBox(

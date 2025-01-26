@@ -43,6 +43,28 @@ class UpdateProfileController extends GetxController with ErrorBags {
     }
   }
 
+  void deleteImageProfile() async {
+    try {
+      String uid = await FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance
+          .collection('employees')
+          .doc(uid)
+          .update({'image': FieldValue.delete()});
+      this.image = null;
+      update();
+      Get.back();
+      Get.snackbar('Successfully update profile!', 'Your profile is updated.');
+    } on FirebaseException catch (error) {
+      print(error);
+      Get.snackbar('Failed to delete image!', error.message!);
+    } catch (error) {
+      print(error);
+      Get.snackbar('Internal Server Error!', 'Contact our customer service.');
+    } finally {
+      this.isLoading.value = false;
+    }
+  }
+
   void updateProfile() async {
     this.isLoading.value = true;
     try {

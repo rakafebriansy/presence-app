@@ -60,14 +60,14 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
                       ),
                       actions: [
                         OutlinedButton(
+                            onPressed: () => Get.back(), child: Text('CANCEL')),
+                        OutlinedButton(
                             onPressed: () async {
                               if (controller.isLoading.isFalse) {
                                 await controller.add();
                               }
                             },
                             child: Text('SUBMIT')),
-                        OutlinedButton(
-                            onPressed: () => Get.back(), child: Text('CANCEL'))
                       ]);
                 },
                 child: controller.isLoading.isFalse

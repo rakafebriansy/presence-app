@@ -90,15 +90,15 @@ class ProfileView extends GetView<ProfileController> {
                               middleText: 'Are you sure wan\'t to log out?',
                               actions: [
                                 OutlinedButton(
+                                    onPressed: () => Get.back(),
+                                    child: Text('CANCEL')),
+                                OutlinedButton(
                                     onPressed: () {
                                       if (controller.isLoading.isFalse) {
                                         controller.logout();
                                       }
                                     },
                                     child: Text('LOGOUT')),
-                                OutlinedButton(
-                                    onPressed: () => Get.back(),
-                                    child: Text('CANCEL'))
                               ]);
                         },
                         leading: Icon(Icons.logout),
