@@ -37,13 +37,16 @@ class HomeView extends GetView<HomeController> {
                     Row(
                       children: [
                         ClipOval(
-                            child: Container(
-                              width: 75,
-                              height: 75,
-                              child: Image.network(controller.user!['image'] ??
-                                'https://ui-avatars.com/api/?name=${controller.user!['name']}', fit: BoxFit.cover,),
+                          child: Container(
+                            width: 75,
+                            height: 75,
+                            child: Image.network(
+                              controller.user!['image'] ??
+                                  'https://ui-avatars.com/api/?name=${controller.user!['name']}',
+                              fit: BoxFit.cover,
                             ),
                           ),
+                        ),
                         SizedBox(
                           width: 10,
                         ),
@@ -147,41 +150,53 @@ class HomeView extends GetView<HomeController> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: 5,
-                      itemBuilder: (ctx, i) => Container(
-                        padding: EdgeInsets.all(20),
-                        margin: EdgeInsets.only(bottom: 20),
-                        decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Masuk',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  '${DateFormat.yMMMEd().format(DateTime.now())}',
-                                ),
-                              ],
+                      itemBuilder: (ctx, i) => Padding(
+                        padding: EdgeInsets.only(bottom: 20),
+                        child: Material(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.grey[200],
+                          child: InkWell(
+                            onTap: () {
+                              Get.toNamed(Routes.ATTENDANCE_DETAIL);
+                            },
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              padding: EdgeInsets.all(20),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'In',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        '${DateFormat.yMMMEd().format(DateTime.now())}',
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    '${DateFormat.jms().format(DateTime.now())}',
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Out',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    '${DateFormat.jms().format(DateTime.now())}',
+                                  ),
+                                ],
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
                             ),
-                            Text(
-                              '${DateFormat.jms().format(DateTime.now())}',
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'Keluar',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              '${DateFormat.jms().format(DateTime.now())}',
-                            ),
-                          ],
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          ),
                         ),
                       ),
                     )
@@ -192,7 +207,7 @@ class HomeView extends GetView<HomeController> {
           style: TabStyle.fixedCircle,
           items: [
             TabItem(icon: Icons.home, title: 'Home'),
-            TabItem(icon: Icons.fingerprint, title: 'Presence'),
+            TabItem(icon: Icons.fingerprint, title: 'Attendance'),
             TabItem(icon: Icons.person, title: 'Profile'),
           ],
           initialActiveIndex: pageC.pageIndex.value,

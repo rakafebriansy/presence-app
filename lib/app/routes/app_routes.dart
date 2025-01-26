@@ -11,6 +11,10 @@ abstract class Routes {
   static const PROFILE = _Paths.PROFILE;
   static const UPDATE_PROFILE = _Paths.UPDATE_PROFILE;
   static const UPDATE_PASSWORD = _Paths.UPDATE_PASSWORD;
+  static const ATTENDANCE = _Paths.ATTENDANCE;
+  static const ATTENDANCE_DETAIL = _Paths.ATTENDANCE_DETAIL;
+  static const ATTENDANCE_ALL = _Paths.ATTENDANCE_ALL;
+  static const ATTENDANCES = _Paths.ATTENDANCES;
 }
 
 abstract class _Paths {
@@ -23,4 +27,8 @@ abstract class _Paths {
   static const PROFILE = '/profile';
   static const UPDATE_PROFILE = '/update-profile';
   static const UPDATE_PASSWORD = '/update-password';
+  static const ATTENDANCE = '/attendance';
+  static const ATTENDANCE_DETAIL = '/attendance-detail';
+  static const ATTENDANCE_ALL = '/attendance-all';
+  static const ATTENDANCES = '/attendances';
 }

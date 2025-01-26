@@ -2,6 +2,10 @@ import 'package:get/get.dart';
 
 import '../modules/add_employee/bindings/add_employee_binding.dart';
 import '../modules/add_employee/views/add_employee_view.dart';
+import '../modules/attendance_detail/bindings/attendance_detail_binding.dart';
+import '../modules/attendance_detail/views/attendance_detail_view.dart';
+import '../modules/attendances/bindings/attendances_binding.dart';
+import '../modules/attendances/views/attendances_view.dart';
 import '../modules/forgot_password/bindings/forgot_password_binding.dart';
 import '../modules/forgot_password/views/forgot_password_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -64,6 +68,16 @@ class AppPages {
       name: _Paths.UPDATE_PASSWORD,
       page: () => const UpdatePasswordView(),
       binding: UpdatePasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.ATTENDANCE_DETAIL,
+      page: () => const AttendanceDetailView(),
+      binding: AttendanceDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.ATTENDANCES,
+      page: () => const AttendancesView(),
+      binding: AttendancesBinding(),
     ),
   ];
 }
