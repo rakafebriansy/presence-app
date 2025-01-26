@@ -85,7 +85,7 @@ class ProfileView extends GetView<ProfileController> {
                             Get.toNamed(Routes.ADD_EMPLOYEE);
                           },
                           leading: Icon(Icons.person_add),
-                          title: Text('Add Employee'),
+                          title: Text('Add User'),
                         ),
                       ListTile(
                         onTap: () {

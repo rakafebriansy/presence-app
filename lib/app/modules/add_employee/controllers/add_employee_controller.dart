@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddEmployeeController extends GetxController with ErrorBags {
   RxBool isLoading = false.obs;
+  RxString selectedJob = 'Lecturer'.obs;
   late TextEditingController nameC;
   late TextEditingController identificationNumberC;
   late TextEditingController emailC;
@@ -88,6 +89,7 @@ class AddEmployeeController extends GetxController with ErrorBags {
         'email': emailC.text,
         'name': nameC.text,
         'role': 'employee',
+        'job': this.selectedJob.value,
         'created_at': DateTime.now().toIso8601String()
       });
 

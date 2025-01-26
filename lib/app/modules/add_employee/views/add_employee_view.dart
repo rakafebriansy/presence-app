@@ -42,13 +42,29 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
                   labelText: 'Email', border: OutlineInputBorder()),
             ),
             SizedBox(
+              height: 20,
+            ),
+            Obx(
+              () => DropdownButton<String>(
+                  value: controller.selectedJob.value,
+                  items: [
+                    DropdownMenuItem(value: 'Lecturer',child: Text('Lecturer')),
+                    DropdownMenuItem(value: 'Student',child: Text('Student')),
+                  ],
+                  onChanged: (String? value) {
+                    if (value != null) {
+                      controller.selectedJob.value = value;
+                    }
+                  }),
+            ),
+            SizedBox(
               height: 30,
             ),
             Obx(
               () => ElevatedButton(
                 onPressed: () {
                   Get.defaultDialog(
-                      title: 'ADD EMPLOYEE',
+                      title: 'ADD USER',
                       middleText: 'Please make sure that you\'re an admin.',
                       content: TextField(
                         autocorrect: false,
