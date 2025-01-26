@@ -214,7 +214,7 @@ class HomeView extends GetView<HomeController> {
             TabItem(icon: Icons.fingerprint, title: 'Attendance'),
             TabItem(icon: Icons.person, title: 'Profile'),
           ],
-          initialActiveIndex: pageC.pageIndex.value,
+          initialActiveIndex: 0,
           onTap: (int i) => pageC.changePage(i),
         ));
   }
