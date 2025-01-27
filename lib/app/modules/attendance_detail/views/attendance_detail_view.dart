@@ -6,7 +6,9 @@ import 'package:intl/intl.dart';
 import '../controllers/attendance_detail_controller.dart';
 
 class AttendanceDetailView extends GetView<AttendanceDetailController> {
-  const AttendanceDetailView({super.key});
+  AttendanceDetailView({super.key});
+
+  final Map<String, dynamic> attendance = Get.arguments;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +27,7 @@ class AttendanceDetailView extends GetView<AttendanceDetailController> {
               children: [
                 Center(
                   child: Text(
-                    '${DateFormat.yMMMMEEEEd().format(DateTime.now())}',
+                    '${DateFormat.yMMMMEEEEd().format(DateTime.parse(attendance['date']))}',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                 ),
@@ -33,18 +35,27 @@ class AttendanceDetailView extends GetView<AttendanceDetailController> {
                   height: 20,
                 ),
                 Text(
-                  'In',
+                  'Check-in',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  'Time: ${DateFormat.jms().format(DateTime.now())}',
-                ),
-                Text(
-                  'Position: -6.2933 , -8.3214',
-                ),
-                Text(
-                  'Status: In range',
-                ),
+                attendance['in'] == null
+                    ? Text('-')
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Time: ${DateFormat.Hms().format(DateTime.parse(attendance['in']['timestamp']))}',
+                          ),
+                          Text(
+                            'Position: ${attendance['in']['address']['street']}, ${attendance['in']['address']['sub_locality'] != null ? attendance['in']['address']['sub_locality']! + ', ' : ''}${attendance['in']['address']['locality'] != null ? attendance['in']['address']['locality']! + ', ' : ''}${attendance['in']['address']['administrative_area']}, ${attendance['in']['address']['country']}',
+                          ),
+                          Text(
+                              'Distance: ${attendance['in']['distance'].toString().split('.').first}m away'),
+                          Text(
+                            'Status: ${attendance['in']['in_range'] ? 'In range' : 'Out of range'}',
+                          ),
+                        ],
+                      ),
                 SizedBox(
                   height: 20,
                 ),
@@ -52,15 +63,24 @@ class AttendanceDetailView extends GetView<AttendanceDetailController> {
                   'Out',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                                Text(
-                  'Time: ${DateFormat.jms().format(DateTime.now())}',
-                ),
-                Text(
-                  'Position: -6.2933 , -8.3214',
-                ),
-                Text(
-                  'Status: Out of range',
-                ),
+                attendance['out'] == null
+                    ? Text('-')
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Time: ${DateFormat.Hms().format(DateTime.parse(attendance['in']['timestamp']))}',
+                          ),
+                          Text(
+                            'Position: ${attendance['out']['address']['street']}, ${attendance['out']['address']['sub_locality'] != null ? attendance['out']['address']['sub_locality']! + ', ' : ''}${attendance['out']['address']['locality'] != null ? attendance['out']['address']['locality']! + ', ' : ''}${attendance['out']['address']['administrative_area']}, ${attendance['out']['address']['country']}',
+                          ),
+                          Text(
+                              'Distance: ${attendance['out']['distance'].toString().split('.').first}m away'),
+                          Text(
+                            'Status: ${attendance['out']['in_range'] ? 'In range' : 'Out of range'}',
+                          ),
+                        ],
+                      ),
               ],
             )),
       ]),

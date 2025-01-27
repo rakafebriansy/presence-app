@@ -31,6 +31,7 @@ class PageHandlingController extends GetxController {
                     .get();
             Map<String, dynamic>? reachAreaData =
                 reachAreaDoc.docs.first.data();
+            print(reachAreaData);
             double distance = Geolocator.distanceBetween(
                 double.parse(reachAreaData['lat']),
                 double.parse(reachAreaData['long']),
@@ -81,7 +82,8 @@ class PageHandlingController extends GetxController {
 
       DocumentSnapshot<Map<String, dynamic>> todayAttendanceDoc =
           await attendancesCol.doc(todayAttendanceId).get();
-      if (todayAttendanceDoc.exists && todayAttendanceDoc.data()!['in'] != null) {
+      if (todayAttendanceDoc.exists &&
+          todayAttendanceDoc.data()!['in'] != null) {
         Map<String, dynamic>? todayAttendanceData = todayAttendanceDoc.data();
         if (todayAttendanceData?['out'] == null) {
           Get.defaultDialog(
