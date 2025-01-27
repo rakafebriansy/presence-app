@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PageHandlingController extends GetxController {
   RxInt pageIndex = 0.obs;
@@ -11,7 +13,7 @@ class PageHandlingController extends GetxController {
       case 1:
         try {
           Position position = await _determinePosition();
-          print('${position.longitude} - ${position.latitude}');
+          await updatePosition(position);
           Get.offAllNamed(Routes.PROFILE);
         } catch (error) {
           Get.snackbar('Failed to get location!', error.toString());
@@ -23,6 +25,15 @@ class PageHandlingController extends GetxController {
       default:
         Get.offAllNamed(Routes.HOME);
     }
+  }
+
+  Future<void> updatePosition(Position position) async {
+    try {
+      String uid = await FirebaseAuth.instance.currentUser!.uid;
+      FirebaseFirestore.instance.collection('employees').doc(uid).update({
+        'position': {'lat': position.latitude, 'long': position.longitude}
+      });
+    } catch (error) {}
   }
 
   Future<Position> _determinePosition() async {

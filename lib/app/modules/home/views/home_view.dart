@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -26,12 +27,17 @@ class HomeView extends GetView<HomeController> {
                 icon: Icon(Icons.person)),
           ],
         ),
-        body: GetBuilder<HomeController>(builder: (context) {
-          return controller.user == null
-              ? Center(
+        body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            stream: controller.watchingUser(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
                   child: CircularProgressIndicator(),
-                )
-              : ListView(
+                );
+              }
+              if (snapshot.hasData) {
+                Map<String, dynamic>? user = snapshot.data!.data();
+                return ListView(
                   padding: EdgeInsets.all(20),
                   children: [
                     Row(
@@ -41,8 +47,8 @@ class HomeView extends GetView<HomeController> {
                             width: 75,
                             height: 75,
                             child: Image.network(
-                              controller.user!['image'] ??
-                                  'https://ui-avatars.com/api/?name=${controller.user!['name']}',
+                              user!['image'] ??
+                                  'https://ui-avatars.com/api/?name=${user!['name']}',
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -58,7 +64,7 @@ class HomeView extends GetView<HomeController> {
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
-                            Text('Jl Raya Raya'),
+                            Text(user['position'] == null ? 'Belum ada lokasi.' : '${user['position']['lat']} | ${user['position']['long']}'),
                           ],
                         )
                       ],
@@ -72,20 +78,20 @@ class HomeView extends GetView<HomeController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            controller.user!['job'],
+                            user!['job'],
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 20,
                           ),
-                          Text(controller.user!['identification_number'],
+                          Text(user!['identification_number'],
                               style: TextStyle(
                                   fontSize: 30, fontWeight: FontWeight.bold)),
                           SizedBox(
                             height: 10,
                           ),
-                          Text(controller.user!['name'],
+                          Text(user!['name'],
                               style: TextStyle(
                                 fontSize: 18,
                               ))
@@ -206,7 +212,24 @@ class HomeView extends GetView<HomeController> {
                     )
                   ],
                 );
-        }),
+              }
+
+              if (snapshot.hasError || snapshot.data == null) {
+                return Center(
+                  child: Text(
+                    'No data available.',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                );
+              }
+
+              return Center(
+                child: Text(
+                  'Internal Server Error.',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              );
+            }),
         bottomNavigationBar: ConvexAppBar(
           style: TabStyle.fixedCircle,
           items: [

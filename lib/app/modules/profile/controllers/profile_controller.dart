@@ -7,11 +7,21 @@ class ProfileController extends GetxController {
   RxBool isLoading = false.obs;
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> watchingUser() async* {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    yield* FirebaseFirestore.instance.collection('employees').doc(uid).snapshots();
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      yield* FirebaseFirestore.instance
+          .collection('employees')
+          .doc(uid)
+          .snapshots();
+    } on FirebaseException catch (error) {
+      print(error);
+      Get.snackbar('Failed to load data!', '${error.message}.');
+    } catch (error) {
+      Get.snackbar('Failed to load data!', error.toString());
+    }
   }
 
-    void logout() async {
+  void logout() async {
     this.isLoading.value = true;
     try {
       await FirebaseAuth.instance.signOut();
