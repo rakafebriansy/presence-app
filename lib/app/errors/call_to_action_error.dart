@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:presence_app/app/helper/custom_styles.dart';
 
 class CallToActionError {
   // Please verify your account first.
@@ -26,13 +27,15 @@ class CallToActionError {
         middleText: this.description,
         actions: [
           OutlinedButton(
-              onPressed: () {
-                this.callback();
-              },
-              child: Text(this.onSubmitText ?? 'SUBMIT')),
-          OutlinedButton(
               onPressed: () => Get.back(),
-              child: Text(this.onCancelText ?? 'CANCEL'))
+              child: Text(this.onCancelText ?? 'CANCEL')),
+          ElevatedButton(
+            onPressed: () {
+              this.callback();
+            },
+            child: Text(this.onSubmitText ?? 'SUBMIT'),
+            style: CustomStyles.roundedPrimaryButton(),
+          ),
         ]);
   }
 }

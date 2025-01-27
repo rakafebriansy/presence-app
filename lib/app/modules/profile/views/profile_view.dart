@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:presence_app/app/controllers/page_handling_controller.dart';
+import 'package:presence_app/app/helper/custom_styles.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 
 import '../controllers/profile_controller.dart';
@@ -94,13 +95,15 @@ class ProfileView extends GetView<ProfileController> {
                                 OutlinedButton(
                                     onPressed: () => Get.back(),
                                     child: Text('CANCEL')),
-                                OutlinedButton(
-                                    onPressed: () {
-                                      if (controller.isLoading.isFalse) {
-                                        controller.logout();
-                                      }
-                                    },
-                                    child: Text('LOGOUT')),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    if (controller.isLoading.isFalse) {
+                                      controller.logout();
+                                    }
+                                  },
+                                  child: Text('LOGOUT'),
+                                  style: CustomStyles.roundedPrimaryButton(),
+                                ),
                               ]);
                         },
                         leading: Icon(Icons.logout),

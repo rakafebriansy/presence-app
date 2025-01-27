@@ -48,8 +48,9 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
               () => DropdownButton<String>(
                   value: controller.selectedJob.value,
                   items: [
-                    DropdownMenuItem(value: 'Lecturer',child: Text('Lecturer')),
-                    DropdownMenuItem(value: 'Student',child: Text('Student')),
+                    DropdownMenuItem(
+                        value: 'Lecturer', child: Text('Lecturer')),
+                    DropdownMenuItem(value: 'Student', child: Text('Student')),
                   ],
                   onChanged: (String? value) {
                     if (value != null) {
@@ -77,13 +78,15 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
                       actions: [
                         OutlinedButton(
                             onPressed: () => Get.back(), child: Text('CANCEL')),
-                        OutlinedButton(
-                            onPressed: () async {
-                              if (controller.isLoading.isFalse) {
-                                await controller.add();
-                              }
-                            },
-                            child: Text('SUBMIT')),
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (controller.isLoading.isFalse) {
+                              await controller.add();
+                            }
+                          },
+                          child: Text('SUBMIT'),
+                          style: CustomStyles.roundedPrimaryButton(),
+                        ),
                       ]);
                 },
                 child: controller.isLoading.isFalse

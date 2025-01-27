@@ -93,13 +93,16 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
                                     OutlinedButton(
                                         onPressed: () => Get.back(),
                                         child: Text('CANCEL')),
-                                    OutlinedButton(
-                                        onPressed: () async {
-                                          if (controller.isLoading.isFalse) {
-                                            controller.deleteImageProfile();
-                                          }
-                                        },
-                                        child: Text('DELETE')),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        if (controller.isLoading.isFalse) {
+                                          controller.deleteImageProfile();
+                                        }
+                                      },
+                                      child: Text('DELETE'),
+                                      style:
+                                          CustomStyles.roundedPrimaryButton(),
+                                    ),
                                   ]);
                             },
                             icon: Icon(Icons.delete)),
