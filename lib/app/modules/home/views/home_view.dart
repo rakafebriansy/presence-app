@@ -149,34 +149,62 @@ class HomeView extends GetView<HomeController> {
                     SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      padding: EdgeInsets.all(20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            children: [
-                              Text('Masuk'),
-                              Text('-'),
-                            ],
-                          ),
-                          Container(
-                            height: 20,
-                            color: Colors.grey,
-                            width: 1,
-                          ),
-                          Column(
-                            children: [
-                              Text('Keluar'),
-                              Text('-'),
-                            ],
-                          ),
-                        ],
-                      ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey[200]),
-                    ),
+                    StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                        stream: controller.watchingTodayAttendance(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (snapshot.hasError) {
+                            return SizedBox(
+                              height: 150,
+                              child: Center(
+                                child: Text(
+                                  'Internal Server Error.',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            );
+                          }
+
+                          Map<String, dynamic>? data = snapshot.data?.data();
+
+                          return Container(
+                            padding: EdgeInsets.all(20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
+                                  children: [
+                                    Text('Check-in'),
+                                    Text(data != null
+                                        ? DateFormat.Hms().format(DateTime.parse(data['in']['timestamp']))
+                                        : '-'),
+                                  ],
+                                ),
+                                Container(
+                                  height: 20,
+                                  color: Colors.grey,
+                                  width: 1,
+                                ),
+                                Column(
+                                  children: [
+                                    Text('Check-out'),
+                                    Text(data != null && data['out'] != null
+                                        ? DateFormat.Hms().format(DateTime.parse(data['out']['timestamp']))
+                                        : '-'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.grey[200]),
+                          );
+                        }),
                     SizedBox(
                       height: 20,
                     ),
@@ -193,9 +221,7 @@ class HomeView extends GetView<HomeController> {
                         Text(
                           'Last 5 days',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16
-                          ),
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         TextButton(
                             onPressed: () {
