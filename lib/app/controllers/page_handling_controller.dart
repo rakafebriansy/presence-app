@@ -28,7 +28,7 @@ class PageHandlingController extends GetxController {
                   .get();
           Map<String, dynamic>? reachAreaData = reachAreaDoc.docs.first.data();
           double distance = Geolocator.distanceBetween(
-              double.parse(reachAreaData!['lat']),
+              double.parse(reachAreaData['lat']),
               double.parse(reachAreaData['long']),
               position.latitude,
               position.longitude);
@@ -85,7 +85,8 @@ class PageHandlingController extends GetxController {
               'lat': position.latitude,
               'long': position.longitude,
               'address': address,
-              'status': distance <= 200 ? 'In range' : 'Out of range'
+              'distance': distance,
+              'in_range': distance <= 200
             }
           });
           Get.snackbar('Successfully checked-out!',
@@ -102,7 +103,8 @@ class PageHandlingController extends GetxController {
             'lat': position.latitude,
             'long': position.longitude,
             'address': address,
-            'status': 'In range'
+            'distance': distance,
+            'in_range': distance <= 200
           }
         });
         Get.snackbar('Successfully checked-in!',

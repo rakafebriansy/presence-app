@@ -23,6 +23,24 @@ class HomeController extends GetxController {
     }
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> watchingLastAttendances() async* {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      yield* FirebaseFirestore.instance
+          .collection('employees')
+          .doc(uid)
+          .collection('attendances')
+          .orderBy('date', descending: true)
+          .limitToLast(5)
+          .snapshots();
+    } on FirebaseException catch (error) {
+      print(error);
+      Get.snackbar('Failed to load data!', '${error.message}.');
+    } catch (error) {
+      Get.snackbar('Failed to load data!', error.toString());
+    }
+  }
+
   void logout() async {
     this.isLoading.value = true;
     try {

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -74,7 +72,8 @@ class HomeView extends GetView<HomeController> {
                               () => GestureDetector(
                                 onTap: () async {
                                   if (pageHandlingC.isLoading.isFalse) {
-                                    await pageHandlingC.updateCurrentUserPosition();
+                                    await pageHandlingC
+                                        .updateCurrentUserPosition();
                                   }
                                 },
                                 child: pageHandlingC.isLoading.isFalse
@@ -193,7 +192,10 @@ class HomeView extends GetView<HomeController> {
                       children: [
                         Text(
                           'Last 5 days',
-                          style: TextStyle(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16
+                          ),
                         ),
                         TextButton(
                             onPressed: () {
@@ -202,60 +204,106 @@ class HomeView extends GetView<HomeController> {
                             child: Text('See more')),
                       ],
                     ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 5,
-                      itemBuilder: (ctx, i) => Padding(
-                        padding: EdgeInsets.only(bottom: 20),
-                        child: Material(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey[200],
-                          child: InkWell(
-                            onTap: () {
-                              Get.toNamed(Routes.ATTENDANCE_DETAIL);
-                            },
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                              padding: EdgeInsets.all(20),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'In',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                    StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        stream: controller.watchingLastAttendances(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (snapshot.hasData &&
+                              snapshot.data?.docs.length != 0) {
+                            return ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: snapshot.data?.docs.length,
+                                itemBuilder: (ctx, i) {
+                                  Map<String, dynamic> attendance =
+                                      snapshot.data!.docs[i].data();
+                                  return Padding(
+                                    padding: EdgeInsets.only(bottom: 20),
+                                    child: Material(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.grey[200],
+                                      child: InkWell(
+                                        onTap: () {
+                                          Get.toNamed(Routes.ATTENDANCE_DETAIL);
+                                        },
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Container(
+                                          padding: EdgeInsets.all(20),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    'Check-in',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    '${DateFormat.yMMMEd().format(DateTime.parse(attendance['date']))}',
+                                                  ),
+                                                ],
+                                              ),
+                                              Text(
+                                                attendance['in'] != null
+                                                    ? '${DateFormat.Hms().format(DateTime.parse(attendance['in']['timestamp']))}'
+                                                    : '-',
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                'Check-out',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                attendance['out'] != null
+                                                    ? '${DateFormat.Hms().format(DateTime.parse(attendance['out']['timestamp']))}'
+                                                    : '-',
+                                              ),
+                                            ],
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                          ),
+                                        ),
                                       ),
-                                      Text(
-                                        '${DateFormat.yMMMEd().format(DateTime.now())}',
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    '${DateFormat.Hms().format(DateTime.now())}',
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Out',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    '${DateFormat.Hms().format(DateTime.now())}',
-                                  ),
-                                ],
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                    ),
+                                  );
+                                });
+                          }
+
+                          if (snapshot.hasError || snapshot.data == null) {
+                            return SizedBox(
+                              height: 150,
+                              child: Center(
+                                child: Text(
+                                  'Internal Server Error.',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            );
+                          }
+
+                          return SizedBox(
+                            height: 150,
+                            child: Center(
+                              child: Text(
+                                'No data available.',
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                    )
+                          );
+                        })
                   ],
                 );
               }
