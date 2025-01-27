@@ -180,7 +180,7 @@ class HomeView extends GetView<HomeController> {
                                 Column(
                                   children: [
                                     Text('Check-in'),
-                                    Text(data != null
+                                    Text(data != null && data['in'] != null
                                         ? DateFormat.Hms().format(DateTime.parse(data['in']['timestamp']))
                                         : '-'),
                                   ],

@@ -8,4 +8,11 @@ class CustomStyles {
         shape: WidgetStatePropertyAll(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))));
   }
+  static ButtonStyle roundedPrimaryButton() {
+    return ButtonStyle(
+        backgroundColor: WidgetStatePropertyAll(Colors.blue),
+        foregroundColor: WidgetStatePropertyAll(Colors.white),
+        shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(99))));
+  }
 }

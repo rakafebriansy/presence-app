@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:presence_app/app/helper/custom_styles.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,26 +16,29 @@ class PageHandlingController extends GetxController {
     pageIndex.value = i;
     switch (i) {
       case 1:
-        this.isLoading.value = true;
         try {
-          Position position = await _determinePosition();
-          final Map<String, String?> address =
-              await _determinePlacemark(position);
-          await _updatePosition(position, address);
+          if (this.isLoading.value == false) {
+            this.isLoading.value = true;
+            Position position = await _determinePosition();
+            final Map<String, String?> address =
+                await _determinePlacemark(position);
+            await _updatePosition(position, address);
 
-          QuerySnapshot<Map<String, dynamic>> reachAreaDoc =
-              await FirebaseFirestore.instance
-                  .collection('reach_area')
-                  .limit(1)
-                  .get();
-          Map<String, dynamic>? reachAreaData = reachAreaDoc.docs.first.data();
-          double distance = Geolocator.distanceBetween(
-              double.parse(reachAreaData['lat']),
-              double.parse(reachAreaData['long']),
-              position.latitude,
-              position.longitude);
+            QuerySnapshot<Map<String, dynamic>> reachAreaDoc =
+                await FirebaseFirestore.instance
+                    .collection('reach_area')
+                    .limit(1)
+                    .get();
+            Map<String, dynamic>? reachAreaData =
+                reachAreaDoc.docs.first.data();
+            double distance = Geolocator.distanceBetween(
+                double.parse(reachAreaData['lat']),
+                double.parse(reachAreaData['long']),
+                position.latitude,
+                position.longitude);
 
-          await _attend(position, address, distance);
+            await _attend(position, address, distance);
+          }
         } catch (error) {
           Get.snackbar('Failed to record attendance!', error.toString());
         } finally {
@@ -76,39 +81,68 @@ class PageHandlingController extends GetxController {
 
       DocumentSnapshot<Map<String, dynamic>> todayAttendanceDoc =
           await attendancesCol.doc(todayAttendanceId).get();
-      if (todayAttendanceDoc.exists) {
+      if (todayAttendanceDoc.exists && todayAttendanceDoc.data()!['in'] != null) {
         Map<String, dynamic>? todayAttendanceData = todayAttendanceDoc.data();
         if (todayAttendanceData?['out'] == null) {
-          attendancesCol.doc(todayAttendanceId).update({
-            'out': {
-              'timestamp': now.toIso8601String(),
-              'lat': position.latitude,
-              'long': position.longitude,
-              'address': address,
-              'distance': distance,
-              'in_range': distance <= 200
-            }
-          });
-          Get.snackbar('Successfully checked-out!',
-              'Attendance was recorded at ${DateFormat.Hms().format(DateTime.now())} o\'clock');
+          Get.defaultDialog(
+              title: 'Checking out',
+              middleText:
+                  'Are you sure you want to record your attendance now?',
+              actions: [
+                OutlinedButton(
+                    onPressed: () => Get.back(), child: Text('CANCEL')),
+                ElevatedButton(
+                  onPressed: () async {
+                    await attendancesCol.doc(todayAttendanceId).update({
+                      'out': {
+                        'timestamp': now.toIso8601String(),
+                        'lat': position.latitude,
+                        'long': position.longitude,
+                        'address': address,
+                        'distance': distance,
+                        'in_range': distance <= 200
+                      }
+                    });
+                    Get.back();
+                    Get.snackbar('Successfully checked-out!',
+                        'Attendance was recorded at ${DateFormat.Hms().format(DateTime.now())} o\'clock');
+                  },
+                  child: Text('CHECK OUT'),
+                  style: CustomStyles.roundedPrimaryButton(),
+                )
+              ]);
         } else {
           Get.snackbar(
               'There\'s no schedule!', 'Please check your schedule correctly.');
         }
       } else {
-        attendancesCol.doc(todayAttendanceId).set({
-          'date': now.toIso8601String(),
-          'in': {
-            'timestamp': now.toIso8601String(),
-            'lat': position.latitude,
-            'long': position.longitude,
-            'address': address,
-            'distance': distance,
-            'in_range': distance <= 200
-          }
-        });
-        Get.snackbar('Successfully checked-in!',
-            'Attendance was recorded at ${DateFormat.Hms().format(DateTime.now())} o\'clock');
+        Get.defaultDialog(
+            title: 'Checking in',
+            middleText: 'Are you sure you want to record your attendance now?',
+            actions: [
+              OutlinedButton(
+                  onPressed: () => Get.back(), child: Text('CANCEL')),
+              ElevatedButton(
+                onPressed: () async {
+                  await attendancesCol.doc(todayAttendanceId).set({
+                    'date': now.toIso8601String(),
+                    'in': {
+                      'timestamp': now.toIso8601String(),
+                      'lat': position.latitude,
+                      'long': position.longitude,
+                      'address': address,
+                      'distance': distance,
+                      'in_range': distance <= 200
+                    }
+                  });
+                  Get.back();
+                  Get.snackbar('Successfully checked-in!',
+                      'Attendance was recorded at ${DateFormat.Hms().format(DateTime.now())} o\'clock');
+                },
+                child: Text('CHECK IN'),
+                style: CustomStyles.roundedPrimaryButton(),
+              ),
+            ]);
       }
     } catch (error) {
       throw error;
