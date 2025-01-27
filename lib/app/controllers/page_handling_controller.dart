@@ -20,7 +20,20 @@ class PageHandlingController extends GetxController {
           final Map<String, String?> address =
               await _determinePlacemark(position);
           await _updatePosition(position, address);
-          await _attend(position, address);
+
+          QuerySnapshot<Map<String, dynamic>> reachAreaDoc =
+              await FirebaseFirestore.instance
+                  .collection('reach_area')
+                  .limit(1)
+                  .get();
+          Map<String, dynamic>? reachAreaData = reachAreaDoc.docs.first.data();
+          double distance = Geolocator.distanceBetween(
+              double.parse(reachAreaData!['lat']),
+              double.parse(reachAreaData['long']),
+              position.latitude,
+              position.longitude);
+
+          await _attend(position, address, distance);
         } catch (error) {
           Get.snackbar('Failed to record attendance!', error.toString());
         } finally {
@@ -48,7 +61,8 @@ class PageHandlingController extends GetxController {
     }
   }
 
-  Future<void> _attend(Position position, Map<String, String?> address) async {
+  Future<void> _attend(
+      Position position, Map<String, String?> address, double distance) async {
     try {
       String uid = await FirebaseAuth.instance.currentUser!.uid;
 
@@ -71,14 +85,14 @@ class PageHandlingController extends GetxController {
               'lat': position.latitude,
               'long': position.longitude,
               'address': address,
-              'status': 'In range'
+              'status': distance <= 200 ? 'In range' : 'Out of range'
             }
           });
           Get.snackbar('Successfully checked-out!',
               'Attendance was recorded at ${DateFormat.Hms().format(DateTime.now())} o\'clock');
         } else {
-          Get.snackbar('There\'s no schedule!',
-              'Please check your schedule correctly.');
+          Get.snackbar(
+              'There\'s no schedule!', 'Please check your schedule correctly.');
         }
       } else {
         attendancesCol.doc(todayAttendanceId).set({
