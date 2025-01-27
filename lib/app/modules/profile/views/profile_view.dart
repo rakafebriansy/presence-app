@@ -134,7 +134,7 @@ class ProfileView extends GetView<ProfileController> {
             TabItem(icon: Icons.fingerprint, title: 'Presence'),
             TabItem(icon: Icons.person, title: 'Profile'),
           ],
-          initialActiveIndex: 2,
+          initialActiveIndex: pageC.pageIndex.value,
           onTap: (int i) => pageC.changePage(i),
         ));
   }

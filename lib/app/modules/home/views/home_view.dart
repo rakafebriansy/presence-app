@@ -81,7 +81,7 @@ class HomeView extends GetView<HomeController> {
                               () => GestureDetector(
                                 onTap: () async {
                                   if (pageHandlingC.isLoading.isFalse) {
-                                    await pageHandlingC.updatePosition();
+                                    await pageHandlingC.updateCurrentUserPosition();
                                   }
                                 },
                                 child: pageHandlingC.isLoading.isFalse
@@ -242,7 +242,7 @@ class HomeView extends GetView<HomeController> {
                                     ],
                                   ),
                                   Text(
-                                    '${DateFormat.jms().format(DateTime.now())}',
+                                    '${DateFormat.Hms().format(DateTime.now())}',
                                   ),
                                   SizedBox(
                                     height: 10,
@@ -253,7 +253,7 @@ class HomeView extends GetView<HomeController> {
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    '${DateFormat.jms().format(DateTime.now())}',
+                                    '${DateFormat.Hms().format(DateTime.now())}',
                                   ),
                                 ],
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,7 +290,7 @@ class HomeView extends GetView<HomeController> {
             TabItem(icon: Icons.fingerprint, title: 'Attendance'),
             TabItem(icon: Icons.person, title: 'Profile'),
           ],
-          initialActiveIndex: 0,
+          initialActiveIndex: pageC.pageIndex.value,
           onTap: (int i) => pageC.changePage(i),
         ));
   }

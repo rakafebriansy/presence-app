@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,12 +11,24 @@ class PageHandlingController extends GetxController {
   RxBool isLoading = false.obs;
 
   void changePage(int i) async {
-    // pageIndex.value = i;
+    pageIndex.value = i;
     switch (i) {
       case 1:
-        await updatePosition();
-        Get.offAllNamed(Routes.PROFILE);
-        break;
+        this.isLoading.value = true;
+        try {
+          Position position = await _determinePosition();
+          final Map<String, String?> address =
+              await _determinePlacemark(position);
+          await _updatePosition(position, address);
+          await _attend(position, address);
+          Get.snackbar('Successfully record attendance!',
+              'Attendance was recorded at ${DateFormat.Hms().format(DateTime.now())} o\'clock');
+        } catch (error) {
+          Get.snackbar('Failed to record attendance!', error.toString());
+        } finally {
+          this.isLoading.value = false;
+          break;
+        }
       case 2:
         Get.offAllNamed(Routes.PROFILE);
         break;
@@ -24,30 +37,80 @@ class PageHandlingController extends GetxController {
     }
   }
 
-  Future<void> updatePosition() async {
+  Future<void> updateCurrentUserPosition() async {
     this.isLoading.value = true;
     try {
-      Position position = await _determinePosition();
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-      Placemark placemark = placemarks[0];
+      final Position position = await _determinePosition();
+      final Map<String, String?> address = await _determinePlacemark(position);
+      await _updatePosition(position, address);
+    } catch (error) {
+      Get.snackbar('Failed to get location!', error.toString());
+    } finally {
+      this.isLoading.value = false;
+    }
+  }
+
+  Future<void> _attend(Position position, Map<String, String?> address) async {
+    try {
+      String uid = await FirebaseAuth.instance.currentUser!.uid;
+
+      CollectionReference<Map<String, dynamic>> attendancesCol =
+          await FirebaseFirestore.instance
+              .collection('employees')
+              .doc(uid)
+              .collection('attendances');
+      QuerySnapshot<Map<String, dynamic>> attendancesSnap =
+          await attendancesCol.get();
+      if (attendancesSnap.docs.length == 0) {
+        DateTime now = DateTime.now();
+        String attendanceId = DateFormat('dd-MM-yyyy').format(now);
+        attendancesCol.doc(attendanceId).set({
+          'date': now.toIso8601String(),
+          'in': {
+            'timestamp': now.toIso8601String(),
+            'lat': position.latitude,
+            'long': position.longitude,
+            'address': address,
+            'status': 'In range'
+          }
+        });
+      } else {
+        //TODO
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<Map<String, String?>> _determinePlacemark(Position position) async {
+    final List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+    final Map<String, String?> address = {
+      'street': placemarks[0].street,
+      'country': placemarks[0].country,
+      'administrative_area': placemarks[0].administrativeArea,
+      if (placemarks[0].locality! != '') 'locality': placemarks[0].locality,
+      if (placemarks[0].subLocality! != '')
+        'sub_locality': placemarks[0].subLocality
+    };
+    return address;
+  }
+
+  Future<void> _updatePosition(
+      Position position, Map<String, String?> address) async {
+    try {
       String uid = await FirebaseAuth.instance.currentUser!.uid;
 
       FirebaseFirestore.instance.collection('employees').doc(uid).update({
         'position': {'lat': position.latitude, 'long': position.longitude},
         'address': {
-          'street': placemark.street,
-          'country': placemark.country,
-          'administrative_area': placemark.administrativeArea,
-          if (placemark.locality! != '') 'locality': placemark.locality,
-          if (placemark.subLocality! != '')
-            'sub_locality': placemark.subLocality
+          'locality': address['locality'],
+          'country': address['country'],
+          'administrative_area': address['administrative_area'],
         }
       });
     } catch (error) {
-      Get.snackbar('Failed to get location!', error.toString());
-    } finally {
-      this.isLoading.value = false;
+      throw error;
     }
   }
 
