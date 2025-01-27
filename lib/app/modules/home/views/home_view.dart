@@ -23,13 +23,6 @@ class HomeView extends GetView<HomeController> {
         appBar: AppBar(
           title: const Text('HOME'),
           centerTitle: true,
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Get.toNamed(Routes.PROFILE);
-                },
-                icon: Icon(Icons.person)),
-          ],
         ),
         body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             stream: controller.watchingUser(),
