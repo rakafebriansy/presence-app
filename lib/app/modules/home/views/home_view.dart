@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +13,8 @@ import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   HomeView({super.key});
+
+  final pageHandlingC = Get.put(PageHandlingController());
 
   final pageC = Get.find<PageHandlingController>();
   @override
@@ -37,6 +41,9 @@ class HomeView extends GetView<HomeController> {
               }
               if (snapshot.hasData) {
                 Map<String, dynamic>? user = snapshot.data!.data();
+                String address = user!['address'] != null
+                    ? '${user['address']['locality']}, ${user['address']['administrative_area']}, ${user['address']['country']}'
+                    : 'Belum ada lokasi.';
                 return ListView(
                   padding: EdgeInsets.all(20),
                   children: [
@@ -47,8 +54,8 @@ class HomeView extends GetView<HomeController> {
                             width: 75,
                             height: 75,
                             child: Image.network(
-                              user!['image'] ??
-                                  'https://ui-avatars.com/api/?name=${user!['name']}',
+                              user['image'] ??
+                                  'https://ui-avatars.com/api/?name=${user['name']}',
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -64,7 +71,53 @@ class HomeView extends GetView<HomeController> {
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
-                            Text(user['position'] == null ? 'Belum ada lokasi.' : '${user['position']['lat']} | ${user['position']['long']}'),
+                            Container(
+                                width: 250,
+                                child: Text(
+                                  address,
+                                  textAlign: TextAlign.start,
+                                )),
+                            Obx(
+                              () => GestureDetector(
+                                onTap: () async {
+                                  if (pageHandlingC.isLoading.isFalse) {
+                                    await pageHandlingC.updatePosition();
+                                  }
+                                },
+                                child: pageHandlingC.isLoading.isFalse
+                                    ? Text(
+                                        'update',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.w600),
+                                      )
+                                    : Flex(
+                                        direction: Axis.horizontal,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                            Text(
+                                              'update',
+                                              style: TextStyle(
+                                                  color: Colors.blue,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            SizedBox(
+                                              width: 4,
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                              width: 5,
+                                              child: CircularProgressIndicator(
+                                                color: Colors.blue,
+                                                strokeWidth: 1,
+                                              ),
+                                            )
+                                          ]),
+                              ),
+                            )
                           ],
                         )
                       ],
@@ -78,20 +131,20 @@ class HomeView extends GetView<HomeController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            user!['job'],
+                            user['job'],
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 20,
                           ),
-                          Text(user!['identification_number'],
+                          Text(user['identification_number'],
                               style: TextStyle(
                                   fontSize: 30, fontWeight: FontWeight.bold)),
                           SizedBox(
                             height: 10,
                           ),
-                          Text(user!['name'],
+                          Text(user['name'],
                               style: TextStyle(
                                 fontSize: 18,
                               ))
