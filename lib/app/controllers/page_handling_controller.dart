@@ -21,8 +21,6 @@ class PageHandlingController extends GetxController {
               await _determinePlacemark(position);
           await _updatePosition(position, address);
           await _attend(position, address);
-          Get.snackbar('Successfully record attendance!',
-              'Attendance was recorded at ${DateFormat.Hms().format(DateTime.now())} o\'clock');
         } catch (error) {
           Get.snackbar('Failed to record attendance!', error.toString());
         } finally {
@@ -59,12 +57,31 @@ class PageHandlingController extends GetxController {
               .collection('employees')
               .doc(uid)
               .collection('attendances');
-      QuerySnapshot<Map<String, dynamic>> attendancesSnap =
-          await attendancesCol.get();
-      if (attendancesSnap.docs.length == 0) {
-        DateTime now = DateTime.now();
-        String attendanceId = DateFormat('dd-MM-yyyy').format(now);
-        attendancesCol.doc(attendanceId).set({
+      DateTime now = DateTime.now();
+      String todayAttendanceId = DateFormat('dd-MM-yyyy').format(now);
+
+      DocumentSnapshot<Map<String, dynamic>> todayAttendanceDoc =
+          await attendancesCol.doc(todayAttendanceId).get();
+      if (todayAttendanceDoc.exists) {
+        Map<String, dynamic>? todayAttendanceData = todayAttendanceDoc.data();
+        if (todayAttendanceData?['out'] == null) {
+          attendancesCol.doc(todayAttendanceId).update({
+            'out': {
+              'timestamp': now.toIso8601String(),
+              'lat': position.latitude,
+              'long': position.longitude,
+              'address': address,
+              'status': 'In range'
+            }
+          });
+          Get.snackbar('Successfully checked-out!',
+              'Attendance was recorded at ${DateFormat.Hms().format(DateTime.now())} o\'clock');
+        } else {
+          Get.snackbar('There\'s no schedule!',
+              'Please check your schedule correctly.');
+        }
+      } else {
+        attendancesCol.doc(todayAttendanceId).set({
           'date': now.toIso8601String(),
           'in': {
             'timestamp': now.toIso8601String(),
@@ -74,8 +91,8 @@ class PageHandlingController extends GetxController {
             'status': 'In range'
           }
         });
-      } else {
-        //TODO
+        Get.snackbar('Successfully checked-in!',
+            'Attendance was recorded at ${DateFormat.Hms().format(DateTime.now())} o\'clock');
       }
     } catch (error) {
       throw error;
