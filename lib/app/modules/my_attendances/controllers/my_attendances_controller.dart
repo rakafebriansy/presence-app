@@ -1,9 +1,27 @@
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyAttendancesController extends GetxController {
-  //TODO: Implement MyAttendancesController
+  Future<QuerySnapshot<Map<String, dynamic>>> getAttendances() async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      return await FirebaseFirestore.instance
+          .collection('employees')
+          .doc(uid)
+          .collection('attendances')
+          .orderBy('date', descending: true)
+          .get();
+    } on FirebaseException catch (error) {
+      print(error);
+      Get.snackbar('Failed to load data!', '${error.message}.');
+      throw Exception('Failed to fetch attendances: ${error.message}');
+    } catch (error) {
+      Get.snackbar('Failed to load data!', error.toString());
+      throw Exception('An unexpected error occurred: $error');
+    }
+  }
 
-  final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -18,6 +36,4 @@ class MyAttendancesController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }

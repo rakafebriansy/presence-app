@@ -31,7 +31,6 @@ class PageHandlingController extends GetxController {
                     .get();
             Map<String, dynamic>? reachAreaData =
                 reachAreaDoc.docs.first.data();
-            print(reachAreaData);
             double distance = Geolocator.distanceBetween(
                 double.parse(reachAreaData['lat']),
                 double.parse(reachAreaData['long']),
