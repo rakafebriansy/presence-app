@@ -11,6 +11,7 @@ import 'package:geocoding/geocoding.dart';
 class PageHandlingController extends GetxController {
   RxInt pageIndex = 0.obs;
   RxBool isLoading = false.obs;
+  late RxMap<String, dynamic> schedule;
 
   void changePage(int i) async {
     pageIndex.value = i;
@@ -58,7 +59,8 @@ class PageHandlingController extends GetxController {
     this.isLoading.value = true;
     try {
       final Position position = await _determinePosition();
-      final Map<String, String?> placemark = await _determinePlacemark(position);
+      final Map<String, String?> placemark =
+          await _determinePlacemark(position);
       yield '${placemark['locality']}, ${placemark['administrative_area']}, ${placemark['country']}';
     } catch (error) {
       Get.snackbar('Failed to get location!', error.toString());

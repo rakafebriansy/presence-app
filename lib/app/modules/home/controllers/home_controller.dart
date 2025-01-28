@@ -87,14 +87,4 @@ class HomeController extends GetxController {
       updateTime();
     });
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

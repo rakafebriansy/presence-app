@@ -14,7 +14,8 @@ class MyAttendancesController extends GetxController {
           .collection('employees')
           .doc(uid)
           .collection('attendances')
-          .where('date', isLessThan: this.end.add(Duration(days: 1)).toIso8601String());
+          .where('date',
+              isLessThan: this.end.add(Duration(days: 1)).toIso8601String());
       if (start != null) {
         query =
             query.where('date', isGreaterThan: this.start!.toIso8601String());
@@ -37,20 +38,5 @@ class MyAttendancesController extends GetxController {
     }
     update();
     Get.back();
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

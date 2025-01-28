@@ -72,14 +72,4 @@ class NewPasswordController extends GetxController with ErrorBags {
 
     super.onInit();
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

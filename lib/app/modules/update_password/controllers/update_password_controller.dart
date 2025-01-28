@@ -78,14 +78,4 @@ class UpdatePasswordController extends GetxController with ErrorBags {
     this.newPasswordC = TextEditingController();
     this.confirmNewPasswordC = TextEditingController();
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

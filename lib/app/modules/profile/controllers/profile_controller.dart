@@ -32,19 +32,4 @@ class ProfileController extends GetxController {
       this.isLoading.value = false;
     }
   }
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

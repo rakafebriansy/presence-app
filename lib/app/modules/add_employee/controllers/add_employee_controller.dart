@@ -24,16 +24,6 @@ class AddEmployeeController extends GetxController with ErrorBags {
   }
 
   @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  @override
   void checkFormValidity() {
     super.checkFormValidity();
     String? errAdminPassword =

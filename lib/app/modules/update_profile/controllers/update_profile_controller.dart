@@ -142,14 +142,4 @@ class UpdateProfileController extends GetxController with ErrorBags {
     }
     throw new Exception('Internal Server Error');
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }
