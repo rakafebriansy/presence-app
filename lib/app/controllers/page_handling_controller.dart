@@ -69,6 +69,48 @@ class PageHandlingController extends GetxController {
     }
   }
 
+  String formatDuration(Duration duration) {
+    int hours = duration.inHours.abs();
+    int minutes = duration.inMinutes.abs().remainder(60);
+    int seconds = duration.inSeconds.abs().remainder(60);
+
+    bool negative = duration.inSeconds.isNegative;
+
+    List<String> parts = [];
+    if (hours > 0) parts.add('$hours jam');
+    if (minutes > 0) parts.add('$minutes menit');
+    if (seconds > 0) parts.add('$seconds detik');
+
+    if (hours == 0 && minutes == 0 && seconds == 0) {
+      return 'On Time';
+    }
+    return '${hours > 0 ? '${hours} ${hours > 1 ? 'hours' : 'hour'} ' : ''}${minutes > 0 ? '${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ' : ''}${seconds > 0 ? '${seconds} ${seconds > 1 ? 'seconds' : 'second'} ' : ''}${negative ? 'earlier' : 'late'}';
+  }
+
+  Text getDifference(Map<String, dynamic> attendance, String key) {
+    final timestamp = attendance[key]?['timestamp'];
+    final scheduleTime = this.schedule?[key];
+    final difference = (timestamp != null && scheduleTime != null)
+        ? DateTime.parse(timestamp).difference(scheduleTime)
+        : null;
+
+    if (difference == null) {
+      return Text(
+        '-',
+        style: TextStyle(fontSize: 12),
+      );
+    }
+
+    final text = formatDuration(difference);
+
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 12,
+      ),
+    );
+  }
+
   Future<void> _attend(
       Position position, Map<String, String?> address, double distance) async {
     try {

@@ -12,56 +12,8 @@ import '../controllers/home_controller.dart';
 class HomeView extends GetView<HomeController> {
   HomeView({super.key});
 
-  final pageHandlingC = Get.put(PageHandlingController());
-
-  String formatDuration(Duration duration) {
-    int hours = duration.inHours.abs();
-    int minutes = duration.inMinutes.abs().remainder(60);
-    int seconds = duration.inSeconds.abs().remainder(60);
-
-    bool negative = duration.inSeconds.isNegative;
-
-    List<String> parts = [];
-    if (hours > 0) parts.add('$hours jam');
-    if (minutes > 0) parts.add('$minutes menit');
-    if (seconds > 0) parts.add('$seconds detik');
-
-    if (hours == 0 && minutes == 0 && seconds == 0) {
-      return 'On Time';
-    }
-    return '${hours > 0 ? '${hours} ${hours > 1 ? 'hours' : 'hour'} ' : ''}${minutes > 0 ? '${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ' : ''}${seconds > 0 ? '${seconds} ${seconds > 1 ? 'seconds' : 'second'} ' : ''}${negative ? 'earlier' : 'late'}';
-  }
-
-  Text getDifference(Map<String, dynamic> attendance, String key) {
-    final timestamp = attendance[key]?['timestamp'];
-    final scheduleTime = pageHandlingC.schedule?[key];
-    final difference = (timestamp != null && scheduleTime != null)
-        ? DateTime.parse(timestamp).difference(scheduleTime)
-        : null;
-
-    if (difference == null) {
-      return Text(
-        '-',
-        style: TextStyle(fontSize: 12),
-      );
-    }
-
-    final text = formatDuration(difference);
-
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: 12,
-        // color: text == 'On Time'
-        //     ? Colors.black
-        //     : difference.isNegative
-        //         ? (key == 'in' ? Colors.green : Colors.red)
-        //         : (key == 'in' ? Colors.red : Colors.green)
-      ),
-    );
-  }
-
-  final pageC = Get.find<PageHandlingController>();
+  final pageHandlingC = Get.find<PageHandlingController>();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -359,25 +311,28 @@ class HomeView extends GetView<HomeController> {
                     SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Last 5 days',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        GestureDetector(
-                            onTap: () {
-                              Get.toNamed(Routes.MY_ATTENDANCES);
-                            },
-                            child: Text(
-                              'See more',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.blue),
-                            )),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Last 5 days',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          GestureDetector(
+                              onTap: () {
+                                Get.toNamed(Routes.MY_ATTENDANCES);
+                              },
+                              child: Text(
+                                'See more',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.blue),
+                              )),
+                        ],
+                      ),
                     ),
                     StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                         stream: controller.watchingLastAttendances(),
@@ -399,12 +354,13 @@ class HomeView extends GetView<HomeController> {
                                   itemBuilder: (ctx, i) {
                                     Map<String, dynamic> attendance =
                                         snapshot.data!.docs[i].data();
-                                    final Text checkInDifference =
-                                        getDifference(attendance, 'in');
+                                    final Text checkInDifference = pageHandlingC
+                                        .getDifference(attendance, 'in');
                                     final Text checkOutDifference =
-                                        getDifference(attendance, 'out');
+                                        pageHandlingC.getDifference(
+                                            attendance, 'out');
                                     return Padding(
-                                      padding: EdgeInsets.only(bottom: 20),
+                                      padding: EdgeInsets.only(left: 5, right: 5,bottom: 20),
                                       child: Material(
                                         elevation: 2,
                                         borderRadius: BorderRadius.circular(6),
@@ -525,8 +481,8 @@ class HomeView extends GetView<HomeController> {
             TabItem(icon: Icons.fingerprint, title: 'Attendance'),
             TabItem(icon: Icons.person, title: 'Profile'),
           ],
-          initialActiveIndex: pageC.pageIndex.value,
-          onTap: (int i) => pageC.changePage(i),
+          initialActiveIndex: pageHandlingC.pageIndex.value,
+          onTap: (int i) => pageHandlingC.changePage(i),
         ));
   }
 }

@@ -3,18 +3,21 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:presence_app/app/controllers/page_handling_controller.dart';
 import 'package:presence_app/app/routes/app_pages.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../controllers/my_attendances_controller.dart';
 
 class MyAttendancesView extends GetView<MyAttendancesController> {
-  const MyAttendancesView({super.key});
+  MyAttendancesView({super.key});
+  final pageHandlingC = Get.find<PageHandlingController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MY ATTENDANCES'),
+        title: const Text('MY ATTENDANCES', style: TextStyle(fontWeight: FontWeight.w600),),
         centerTitle: true,
         actions: [
           IconButton(
@@ -41,93 +44,108 @@ class MyAttendancesView extends GetView<MyAttendancesController> {
           ),
         ],
       ),
-      body: GetBuilder<MyAttendancesController>(builder: (c) {
-        return FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            future: c.getAttendances(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              if (snapshot.hasData && snapshot.data?.docs.length != 0) {
-                return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data?.docs.length,
-                    itemBuilder: (ctx, i) {
-                      Map<String, dynamic> attendance =
-                          snapshot.data!.docs[i].data();
-                      return Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        child: Material(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey[200],
-                          child: InkWell(
-                            onTap: () {
-                              Get.toNamed(Routes.ATTENDANCE_DETAIL,
-                                  arguments: attendance);
-                            },
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                              padding: EdgeInsets.all(20),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Check-in',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        '${DateFormat.yMMMEd().format(DateTime.parse(attendance['date']))}',
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    attendance['in'] != null
-                                        ? '${DateFormat.Hms().format(DateTime.parse(attendance['in']['timestamp']))}'
-                                        : '-',
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'Check-out',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    attendance['out'] != null
-                                        ? '${DateFormat.Hms().format(DateTime.parse(attendance['out']['timestamp']))}'
-                                        : '-',
-                                  ),
-                                ],
-                                crossAxisAlignment: CrossAxisAlignment.start,
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        child: GetBuilder<MyAttendancesController>(builder: (c) {
+          return FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              future: c.getAttendances(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+        
+                if (snapshot.hasData && snapshot.data?.docs.length != 0) {
+                  return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data?.docs.length,
+                      itemBuilder: (ctx, i) {
+                        Map<String, dynamic> attendance =
+                            snapshot.data!.docs[i].data();
+                        final Text checkInDifference =
+                            pageHandlingC.getDifference(attendance, 'in');
+                        final Text checkOutDifference =
+                            pageHandlingC.getDifference(attendance, 'out');
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 20),
+                          child: Material(
+                            elevation: 2,
+                            borderRadius: BorderRadius.circular(6),
+                            color: Colors.white,
+                            child: InkWell(
+                              onTap: () {
+                                Get.toNamed(Routes.ATTENDANCE_DETAIL,
+                                    arguments: attendance);
+                              },
+                              borderRadius: BorderRadius.circular(6),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey[300]!)),
+                                padding: EdgeInsets.all(20),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      '${DateFormat.yMMMEd().format(DateTime.parse(attendance['date']))}',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Flex(
+                                      direction: Axis.horizontal,
+                                      children: [
+                                        Icon(
+                                          Icons.login,
+                                          size: 14,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        checkInDifference
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Flex(
+                                      direction: Axis.horizontal,
+                                      children: [
+                                        Icon(
+                                          Icons.logout,
+                                          size: 14,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        checkOutDifference,
+                                      ],
+                                    ),
+                                  ],
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    });
-              }
-
-              return SizedBox(
-                height: 150,
-                child: Center(
-                  child: Text(
-                    'No data available.',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                        );
+                      });
+                }
+        
+                return SizedBox(
+                  height: 150,
+                  child: Center(
+                    child: Text(
+                      'No data available.',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-              );
-            });
-      }),
+                );
+              });
+        }),
+      ),
     );
   }
 }

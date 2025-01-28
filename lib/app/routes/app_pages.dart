@@ -76,7 +76,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MY_ATTENDANCES,
-      page: () => const MyAttendancesView(),
+      page: () => MyAttendancesView(),
       binding: MyAttendancesBinding(),
     ),
   ];
