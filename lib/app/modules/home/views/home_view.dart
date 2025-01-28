@@ -14,6 +14,53 @@ class HomeView extends GetView<HomeController> {
 
   final pageHandlingC = Get.put(PageHandlingController());
 
+  String formatDuration(Duration duration) {
+    int hours = duration.inHours.abs();
+    int minutes = duration.inMinutes.abs().remainder(60);
+    int seconds = duration.inSeconds.abs().remainder(60);
+
+    bool negative = duration.inSeconds.isNegative;
+
+    List<String> parts = [];
+    if (hours > 0) parts.add('$hours jam');
+    if (minutes > 0) parts.add('$minutes menit');
+    if (seconds > 0) parts.add('$seconds detik');
+
+    if (hours == 0 && minutes == 0 && seconds == 0) {
+      return 'On Time';
+    }
+    return '${hours > 0 ? '${hours} ${hours > 1 ? 'hours' : 'hour'} ' : ''}${minutes > 0 ? '${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ' : ''}${seconds > 0 ? '${seconds} ${seconds > 1 ? 'seconds' : 'second'} ' : ''}${negative ? 'earlier' : 'late'}';
+  }
+
+  Text getDifference(Map<String, dynamic> attendance, String key) {
+    final timestamp = attendance[key]?['timestamp'];
+    final scheduleTime = pageHandlingC.schedule?[key];
+    final difference = (timestamp != null && scheduleTime != null)
+        ? DateTime.parse(timestamp).difference(scheduleTime)
+        : null;
+
+    if (difference == null) {
+      return Text(
+        '-',
+        style: TextStyle(fontSize: 12),
+      );
+    }
+
+    final text = formatDuration(difference);
+
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 12,
+        // color: text == 'On Time'
+        //     ? Colors.black
+        //     : difference.isNegative
+        //         ? (key == 'in' ? Colors.green : Colors.red)
+        //         : (key == 'in' ? Colors.red : Colors.green)
+      ),
+    );
+  }
+
   final pageC = Get.find<PageHandlingController>();
   @override
   Widget build(BuildContext context) {
@@ -175,7 +222,8 @@ class HomeView extends GetView<HomeController> {
                                                 Text(
                                                   '${controller.timeString.value}',
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight.w300,
+                                                      fontWeight:
+                                                          FontWeight.w300,
                                                       fontSize: 20),
                                                 )
                                               ],
@@ -199,7 +247,8 @@ class HomeView extends GetView<HomeController> {
                                                 StreamBuilder<String>(
                                                     stream: pageHandlingC
                                                         .updateCurrentUserPosition(),
-                                                    builder: (context, snapshot) {
+                                                    builder:
+                                                        (context, snapshot) {
                                                       String address = snapshot
                                                               .data ??
                                                           'Belum menemukan lokasi';
@@ -318,11 +367,16 @@ class HomeView extends GetView<HomeController> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),
-                        TextButton(
-                            onPressed: () {
+                        GestureDetector(
+                            onTap: () {
                               Get.toNamed(Routes.MY_ATTENDANCES);
                             },
-                            child: Text('See more')),
+                            child: Text(
+                              'See more',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blue),
+                            )),
                       ],
                     ),
                     StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -336,72 +390,90 @@ class HomeView extends GetView<HomeController> {
                           }
                           if (snapshot.hasData &&
                               snapshot.data?.docs.length != 0) {
-                            return ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: snapshot.data?.docs.length,
-                                itemBuilder: (ctx, i) {
-                                  Map<String, dynamic> attendance =
-                                      snapshot.data!.docs[i].data();
-                                  return Padding(
-                                    padding: EdgeInsets.only(bottom: 20),
-                                    child: Material(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.grey[200],
-                                      child: InkWell(
-                                        onTap: () {
-                                          Get.toNamed(Routes.ATTENDANCE_DETAIL,
-                                              arguments: attendance);
-                                        },
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: Container(
-                                          padding: EdgeInsets.all(20),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    'Check-in',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Text(
-                                                    '${DateFormat.yMMMEd().format(DateTime.parse(attendance['date']))}',
-                                                  ),
-                                                ],
-                                              ),
-                                              Text(
-                                                attendance['in'] != null
-                                                    ? '${DateFormat.Hms().format(DateTime.parse(attendance['in']['timestamp']))}'
-                                                    : '-',
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                'Check-out',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(
-                                                attendance['out'] != null
-                                                    ? '${DateFormat.Hms().format(DateTime.parse(attendance['out']['timestamp']))}'
-                                                    : '-',
-                                              ),
-                                            ],
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                            return GetBuilder<PageHandlingController>(
+                                builder: (context) {
+                              return ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: snapshot.data?.docs.length,
+                                  itemBuilder: (ctx, i) {
+                                    Map<String, dynamic> attendance =
+                                        snapshot.data!.docs[i].data();
+                                    final Text checkInDifference =
+                                        getDifference(attendance, 'in');
+                                    final Text checkOutDifference =
+                                        getDifference(attendance, 'out');
+                                    return Padding(
+                                      padding: EdgeInsets.only(bottom: 20),
+                                      child: Material(
+                                        elevation: 2,
+                                        borderRadius: BorderRadius.circular(6),
+                                        color: Colors.white,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Get.toNamed(
+                                                Routes.ATTENDANCE_DETAIL,
+                                                arguments: attendance);
+                                          },
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                                border: Border.all(
+                                                    width: 1,
+                                                    color: Colors.grey[300]!)),
+                                            padding: EdgeInsets.all(20),
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  '${DateFormat.yMMMEd().format(DateTime.parse(attendance['date']))}',
+                                                  style:
+                                                      TextStyle(fontSize: 16),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Flex(
+                                                  direction: Axis.horizontal,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.login,
+                                                      size: 14,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    checkInDifference
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Flex(
+                                                  direction: Axis.horizontal,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.logout,
+                                                      size: 14,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    checkOutDifference,
+                                                  ],
+                                                ),
+                                              ],
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                });
+                                    );
+                                  });
+                            });
                           }
 
                           if (snapshot.hasError || snapshot.data == null) {

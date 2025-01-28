@@ -11,7 +11,7 @@ import 'package:geocoding/geocoding.dart';
 class PageHandlingController extends GetxController {
   RxInt pageIndex = 0.obs;
   RxBool isLoading = false.obs;
-  late RxMap<String, dynamic> schedule;
+  Map<String, DateTime>? schedule;
 
   void changePage(int i) async {
     pageIndex.value = i;
@@ -190,5 +190,21 @@ class PageHandlingController extends GetxController {
     }
 
     return await Geolocator.getCurrentPosition();
+  }
+
+  @override
+  void onInit() async {
+    super.onInit();
+    final scheduleDoc =
+        await FirebaseFirestore.instance.collection('schedule').limit(1).get();
+    Map<String, dynamic>? schedule = scheduleDoc.docs.first.data();
+    DateTime now = DateTime.now();
+    this.schedule = <String, DateTime>{
+      'in': DateTime(now.year, now.month, now.day, schedule['in']['hour'],
+          schedule['in']['minute']),
+      'out': DateTime(now.year, now.month, now.day, schedule['out']['hour'],
+          schedule['out']['minute'])
+    };
+    update();
   }
 }
