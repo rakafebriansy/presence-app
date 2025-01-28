@@ -18,10 +18,6 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('HOME'),
-          centerTitle: true,
-        ),
         body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             stream: controller.watchingUser(),
             builder: (context, snapshot) {
@@ -36,83 +32,139 @@ class HomeView extends GetView<HomeController> {
                     ? '${user['address']['locality']}, ${user['address']['administrative_area']}, ${user['address']['country']}'
                     : 'Belum ada lokasi.';
                 return ListView(
-                  padding: EdgeInsets.all(20),
+                  padding:
+                      EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 40),
                   children: [
-                    Row(
-                      children: [
-                        ClipOval(
-                          child: Container(
-                            width: 75,
-                            height: 75,
-                            child: Image.network(
-                              user['image'] ??
-                                  'https://ui-avatars.com/api/?name=${user['name']}',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    Card(
+                      elevation: 2,
+                      color: Color(0xFFEB7777),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
                           children: [
-                            Text(
-                              'Welcome',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
                             Container(
-                                width: 250,
-                                child: Text(
-                                  address,
-                                  textAlign: TextAlign.start,
-                                )),
-                            Obx(
-                              () => GestureDetector(
-                                onTap: () async {
-                                  if (pageHandlingC.isLoading.isFalse) {
-                                    await pageHandlingC
-                                        .updateCurrentUserPosition();
-                                  }
-                                },
-                                child: pageHandlingC.isLoading.isFalse
-                                    ? Text(
-                                        'update',
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.blue,
-                                            fontWeight: FontWeight.w600),
-                                      )
-                                    : Flex(
-                                        direction: Axis.horizontal,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                            Text(
-                                              'update',
-                                              style: TextStyle(
-                                                  color: Colors.blue,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            SizedBox(
-                                              width: 4,
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                              width: 5,
-                                              child: CircularProgressIndicator(
-                                                color: Colors.blue,
-                                                strokeWidth: 1,
-                                              ),
-                                            )
-                                          ]),
+                              child: Flex(
+                                direction: Axis.horizontal,
+                                children: [
+                                  Icon(
+                                    Icons.phone_android_rounded,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'Presence App',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
+                                  )
+                                ],
                               ),
-                            )
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Divider(thickness: 2, color: Colors.white),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              children: [
+                                ClipOval(
+                                  child: Container(
+                                    width: 55,
+                                    height: 55,
+                                    child: Image.network(
+                                      user['image'] ??
+                                          'https://ui-avatars.com/api/?name=${user['name']}',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Container(
+                                  width: 250,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        (user['name'] as String).toUpperCase(),
+                                        style: TextStyle(
+                                            overflow: TextOverflow.ellipsis,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        user['identification_number'],
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.white),
+                                      ),
+                                      // Obx(
+                                      //   () => GestureDetector(
+                                      //     onTap: () async {
+                                      //       if (pageHandlingC.isLoading.isFalse) {
+                                      //         await pageHandlingC
+                                      //             .updateCurrentUserPosition();
+                                      //       }
+                                      //     },
+                                      //     child: pageHandlingC.isLoading.isFalse
+                                      //         ? Text(
+                                      //             'update',
+                                      //             style: TextStyle(
+                                      //                 fontSize: 12,
+                                      //                 color: Colors.blue,
+                                      //                 fontWeight: FontWeight.w600),
+                                      //           )
+                                      //         : Flex(
+                                      //             direction: Axis.horizontal,
+                                      //             crossAxisAlignment:
+                                      //                 CrossAxisAlignment.center,
+                                      //             children: [
+                                      //                 Text(
+                                      //                   'update',
+                                      //                   style: TextStyle(
+                                      //                       color: Colors.blue,
+                                      //                       fontSize: 12,
+                                      //                       fontWeight:
+                                      //                           FontWeight.w600),
+                                      //                 ),
+                                      //                 SizedBox(
+                                      //                   width: 4,
+                                      //                 ),
+                                      //                 SizedBox(
+                                      //                   height: 5,
+                                      //                   width: 5,
+                                      //                   child:
+                                      //                       CircularProgressIndicator(
+                                      //                     color: Colors.blue,
+                                      //                     strokeWidth: 1,
+                                      //                   ),
+                                      //                 )
+                                      //               ]),
+                                      //   ),
+                                      // )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ],
-                        )
-                      ],
+                        ),
+                      ),
                     ),
                     SizedBox(
                       height: 20,
@@ -181,7 +233,9 @@ class HomeView extends GetView<HomeController> {
                                   children: [
                                     Text('Check-in'),
                                     Text(data != null && data['in'] != null
-                                        ? DateFormat.Hms().format(DateTime.parse(data['in']['timestamp']))
+                                        ? DateFormat.Hms().format(
+                                            DateTime.parse(
+                                                data['in']['timestamp']))
                                         : '-'),
                                   ],
                                 ),
@@ -194,7 +248,9 @@ class HomeView extends GetView<HomeController> {
                                   children: [
                                     Text('Check-out'),
                                     Text(data != null && data['out'] != null
-                                        ? DateFormat.Hms().format(DateTime.parse(data['out']['timestamp']))
+                                        ? DateFormat.Hms().format(
+                                            DateTime.parse(
+                                                data['out']['timestamp']))
                                         : '-'),
                                   ],
                                 ),
@@ -255,7 +311,8 @@ class HomeView extends GetView<HomeController> {
                                       color: Colors.grey[200],
                                       child: InkWell(
                                         onTap: () {
-                                          Get.toNamed(Routes.ATTENDANCE_DETAIL, arguments: attendance);
+                                          Get.toNamed(Routes.ATTENDANCE_DETAIL,
+                                              arguments: attendance);
                                         },
                                         borderRadius: BorderRadius.circular(20),
                                         child: Container(
