@@ -50,11 +50,12 @@ class HomeView extends GetView<HomeController> {
                                 direction: Axis.horizontal,
                                 children: [
                                   Icon(
-                                    Icons.phone_android_rounded,
+                                    Icons.co_present_rounded,
                                     color: Colors.white,
+                                    size: 16,
                                   ),
                                   SizedBox(
-                                    width: 5,
+                                    width: 6,
                                   ),
                                   Text(
                                     'Presence App',
