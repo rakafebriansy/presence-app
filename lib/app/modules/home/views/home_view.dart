@@ -18,25 +18,22 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            stream: controller.watchingUser(),
+        body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            future: controller.getUser(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child: CircularProgressIndicator(),
                 );
               }
-              if (snapshot.hasData) {
+              if (snapshot.hasData && snapshot.data!.data() != null) {
                 Map<String, dynamic>? user = snapshot.data!.data();
-                String address = user!['address'] != null
-                    ? '${user['address']['locality']}, ${user['address']['administrative_area']}, ${user['address']['country']}'
-                    : 'Belum ada lokasi.';
                 return ListView(
                   padding:
                       EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 40),
                   children: [
                     Card(
-                      elevation: 2,
+                      elevation: 1,
                       color: Color(0xFFEB7777),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -80,7 +77,7 @@ class HomeView extends GetView<HomeController> {
                                     width: 55,
                                     height: 55,
                                     child: Image.network(
-                                      user['image'] ??
+                                      user!['image'] ??
                                           'https://ui-avatars.com/api/?name=${user['name']}',
                                       fit: BoxFit.cover,
                                     ),
@@ -114,50 +111,6 @@ class HomeView extends GetView<HomeController> {
                                             fontWeight: FontWeight.w400,
                                             color: Colors.white),
                                       ),
-                                      // Obx(
-                                      //   () => GestureDetector(
-                                      //     onTap: () async {
-                                      //       if (pageHandlingC.isLoading.isFalse) {
-                                      //         await pageHandlingC
-                                      //             .updateCurrentUserPosition();
-                                      //       }
-                                      //     },
-                                      //     child: pageHandlingC.isLoading.isFalse
-                                      //         ? Text(
-                                      //             'update',
-                                      //             style: TextStyle(
-                                      //                 fontSize: 12,
-                                      //                 color: Colors.blue,
-                                      //                 fontWeight: FontWeight.w600),
-                                      //           )
-                                      //         : Flex(
-                                      //             direction: Axis.horizontal,
-                                      //             crossAxisAlignment:
-                                      //                 CrossAxisAlignment.center,
-                                      //             children: [
-                                      //                 Text(
-                                      //                   'update',
-                                      //                   style: TextStyle(
-                                      //                       color: Colors.blue,
-                                      //                       fontSize: 12,
-                                      //                       fontWeight:
-                                      //                           FontWeight.w600),
-                                      //                 ),
-                                      //                 SizedBox(
-                                      //                   width: 4,
-                                      //                 ),
-                                      //                 SizedBox(
-                                      //                   height: 5,
-                                      //                   width: 5,
-                                      //                   child:
-                                      //                       CircularProgressIndicator(
-                                      //                     color: Colors.blue,
-                                      //                     strokeWidth: 1,
-                                      //                   ),
-                                      //                 )
-                                      //               ]),
-                                      //   ),
-                                      // )
                                     ],
                                   ),
                                 )
@@ -166,38 +119,6 @@ class HomeView extends GetView<HomeController> {
                           ],
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user['job'],
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(user['identification_number'],
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold)),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(user['name'],
-                              style: TextStyle(
-                                fontSize: 18,
-                              ))
-                        ],
-                      ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey[200]),
                     ),
                     SizedBox(
                       height: 20,
@@ -225,41 +146,165 @@ class HomeView extends GetView<HomeController> {
 
                           Map<String, dynamic>? data = snapshot.data?.data();
 
-                          return Container(
-                            padding: EdgeInsets.all(20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  children: [
-                                    Text('Check-in'),
-                                    Text(data != null && data['in'] != null
-                                        ? DateFormat.Hms().format(
-                                            DateTime.parse(
-                                                data['in']['timestamp']))
-                                        : '-'),
-                                  ],
-                                ),
-                                Container(
-                                  height: 20,
-                                  color: Colors.grey,
-                                  width: 1,
-                                ),
-                                Column(
-                                  children: [
-                                    Text('Check-out'),
-                                    Text(data != null && data['out'] != null
-                                        ? DateFormat.Hms().format(
-                                            DateTime.parse(
-                                                data['out']['timestamp']))
-                                        : '-'),
-                                  ],
-                                ),
-                              ],
+                          return Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                    width: 1, color: Colors.grey[200]!)),
+                            elevation: 1,
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  Obx(() {
+                                    if (controller.timeString.value == '') {
+                                      return SizedBox(
+                                        height: 50,
+                                      );
+                                    }
+                                    return Container(
+                                      height: 50,
+                                      child: Column(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Flex(
+                                              direction: Axis.horizontal,
+                                              children: [
+                                                Text(
+                                                  '${controller.timeString.value}',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.w300,
+                                                      fontSize: 20),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Flex(
+                                              direction: Axis.horizontal,
+                                              children: [
+                                                Icon(
+                                                  Icons.location_on_sharp,
+                                                  size: 16,
+                                                ),
+                                                SizedBox(
+                                                  width: 2,
+                                                ),
+                                                StreamBuilder<String>(
+                                                    stream: pageHandlingC
+                                                        .updateCurrentUserPosition(),
+                                                    builder: (context, snapshot) {
+                                                      String address = snapshot
+                                                              .data ??
+                                                          'Belum menemukan lokasi';
+                                                      return Text(
+                                                        address,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: 12),
+                                                      );
+                                                    })
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                                border: Border.all(
+                                                    width: 1,
+                                                    color: Colors.grey[300]!)),
+                                            child: Column(
+                                              children: [
+                                                Text('CHECK-IN'),
+                                                Container(
+                                                  height: 30,
+                                                  child: Center(
+                                                    child: Text(
+                                                      data != null &&
+                                                              data['in'] != null
+                                                          ? DateFormat.Hms()
+                                                              .format(DateTime
+                                                                  .parse(data[
+                                                                          'in'][
+                                                                      'timestamp']))
+                                                          : '-',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w300),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                                border: Border.all(
+                                                    width: 1,
+                                                    color: Colors.grey[300]!)),
+                                            child: Column(
+                                              children: [
+                                                Text('CHECK-OUT'),
+                                                Container(
+                                                  height: 30,
+                                                  child: Center(
+                                                    child: Text(
+                                                      data != null &&
+                                                              data['out'] !=
+                                                                  null
+                                                          ? DateFormat.Hms()
+                                                              .format(DateTime
+                                                                  .parse(data[
+                                                                          'out']
+                                                                      [
+                                                                      'timestamp']))
+                                                          : '-',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w300),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.grey[200]),
                           );
                         }),
                     SizedBox(

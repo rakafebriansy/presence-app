@@ -22,7 +22,7 @@ class PageHandlingController extends GetxController {
             Position position = await _determinePosition();
             final Map<String, String?> address =
                 await _determinePlacemark(position);
-            await _updatePosition(position, address);
+            // await _updatePosition(position, address);
 
             QuerySnapshot<Map<String, dynamic>> reachAreaDoc =
                 await FirebaseFirestore.instance
@@ -49,16 +49,17 @@ class PageHandlingController extends GetxController {
         Get.offAllNamed(Routes.PROFILE);
         break;
       default:
+        await updateCurrentUserPosition();
         Get.offAllNamed(Routes.HOME);
     }
   }
 
-  Future<void> updateCurrentUserPosition() async {
+  Stream<String> updateCurrentUserPosition() async* {
     this.isLoading.value = true;
     try {
       final Position position = await _determinePosition();
-      final Map<String, String?> address = await _determinePlacemark(position);
-      await _updatePosition(position, address);
+      final Map<String, String?> placemark = await _determinePlacemark(position);
+      yield '${placemark['locality']}, ${placemark['administrative_area']}, ${placemark['country']}';
     } catch (error) {
       Get.snackbar('Failed to get location!', error.toString());
     } finally {
@@ -162,24 +163,6 @@ class PageHandlingController extends GetxController {
         'sub_locality': placemarks[0].subLocality
     };
     return address;
-  }
-
-  Future<void> _updatePosition(
-      Position position, Map<String, String?> address) async {
-    try {
-      String uid = await FirebaseAuth.instance.currentUser!.uid;
-
-      FirebaseFirestore.instance.collection('employees').doc(uid).update({
-        'position': {'lat': position.latitude, 'long': position.longitude},
-        'address': {
-          'locality': address['locality'],
-          'country': address['country'],
-          'administrative_area': address['administrative_area'],
-        }
-      });
-    } catch (error) {
-      throw error;
-    }
   }
 
   Future<Position> _determinePosition() async {

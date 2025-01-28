@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
@@ -8,19 +10,19 @@ import 'package:presence_app/app/routes/app_pages.dart';
 class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   Map<String, dynamic>? user;
+  RxString timeString = "".obs;
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> watchingUser() async* {
+  Future<DocumentSnapshot<Map<String, dynamic>>> getUser() async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
-      yield* FirebaseFirestore.instance
-          .collection('employees')
-          .doc(uid)
-          .snapshots();
+      return FirebaseFirestore.instance.collection('employees').doc(uid).get();
     } on FirebaseException catch (error) {
       print(error);
       Get.snackbar('Failed to load data!', '${error.message}.');
+      throw error;
     } catch (error) {
       Get.snackbar('Failed to load data!', error.toString());
+      throw error;
     }
   }
 
@@ -42,7 +44,8 @@ class HomeController extends GetxController {
     }
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> watchingTodayAttendance() async* {
+  Stream<DocumentSnapshot<Map<String, dynamic>>>
+      watchingTodayAttendance() async* {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
       String attendanceId = DateFormat('dd-MM-yyyy').format(DateTime.now());
@@ -72,9 +75,17 @@ class HomeController extends GetxController {
     }
   }
 
+  void updateTime() {
+    final now = DateTime.now();
+    timeString.value = DateFormat('EEEE, HH:mm:ss').format(now).toString();
+  }
+
   @override
   void onInit() async {
     super.onInit();
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      updateTime();
+    });
   }
 
   @override
