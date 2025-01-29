@@ -129,7 +129,7 @@ class ProfileView extends GetView<ProfileController> {
                                   onTap: () =>
                                       Get.toNamed(Routes.UPDATE_PROFILE),
                                   leading: Icon(Icons.person,
-                                      color: Color(0xFFEB7777)),
+                                      color: Color(0xFF7AA0DA)),
                                   title: Text('Update Profile'),
                                 ),
                               ),
@@ -144,7 +144,7 @@ class ProfileView extends GetView<ProfileController> {
                                   onTap: () =>
                                       Get.toNamed(Routes.UPDATE_PASSWORD),
                                   leading: Icon(Icons.vpn_key,
-                                      color: Color(0xFFEB7777)),
+                                      color: Color(0xFF7AA0DA)),
                                   title: Text('Update Password'),
                                 ),
                               ),
@@ -161,7 +161,7 @@ class ProfileView extends GetView<ProfileController> {
                                       Get.toNamed(Routes.ADD_EMPLOYEE);
                                     },
                                     leading: Icon(Icons.person_add,
-                                        color: Color(0xFFEB7777)),
+                                        color: Color(0xFF7AA0DA)),
                                     title: Text('Add User'),
                                   ),
                                 ),
@@ -197,7 +197,7 @@ class ProfileView extends GetView<ProfileController> {
                                   },
                                   leading: Icon(
                                     Icons.logout,
-                                    color: Color(0xFFEB7777),
+                                    color: Color(0xFF7AA0DA),
                                   ),
                                   title: Text('Logout'),
                                 ),
@@ -228,7 +228,7 @@ class ProfileView extends GetView<ProfileController> {
               );
             }),
         bottomNavigationBar: ConvexAppBar(
-          backgroundColor: Color(0xFFEB7777),
+          backgroundColor: Color(0xFF7AA0DA),
           style: TabStyle.fixedCircle,
           items: [
             TabItem(icon: Icons.home, title: 'Home'),

@@ -33,7 +33,7 @@ class HomeView extends GetView<HomeController> {
                   children: [
                     Card(
                       elevation: 1,
-                      color: Color(0xFFEB7777),
+                      color: Color(0xFF7AA0DA),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -329,7 +329,7 @@ class HomeView extends GetView<HomeController> {
                                 'See more',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.blue),
+                                    color: Color(0xFF8688BC)),
                               )),
                         ],
                       ),
@@ -479,7 +479,7 @@ class HomeView extends GetView<HomeController> {
               );
             }),
         bottomNavigationBar: ConvexAppBar(
-          backgroundColor: Color(0xFFEB7777),
+          backgroundColor: Color(0xFF7AA0DA),
           style: TabStyle.fixedCircle,
           items: [
             TabItem(icon: Icons.home, title: 'Home'),
