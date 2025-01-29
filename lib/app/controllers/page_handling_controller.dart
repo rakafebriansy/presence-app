@@ -11,7 +11,7 @@ import 'package:geocoding/geocoding.dart';
 class PageHandlingController extends GetxController {
   RxInt pageIndex = 0.obs;
   RxBool isLoading = false.obs;
-  Map<String, DateTime>? schedule;
+  Map<String, dynamic>? schedule;
 
   void changePage(int i) async {
     pageIndex.value = i;
@@ -23,7 +23,6 @@ class PageHandlingController extends GetxController {
             Position position = await _determinePosition();
             final Map<String, String?> address =
                 await _determinePlacemark(position);
-            // await _updatePosition(position, address);
 
             QuerySnapshot<Map<String, dynamic>> reachAreaDoc =
                 await FirebaseFirestore.instance
@@ -69,7 +68,7 @@ class PageHandlingController extends GetxController {
     }
   }
 
-  String formatDuration(Duration duration) {
+  Text formatDuration(Duration duration, String key) {
     int hours = duration.inHours.abs();
     int minutes = duration.inMinutes.abs().remainder(60);
     int seconds = duration.inSeconds.abs().remainder(60);
@@ -81,34 +80,45 @@ class PageHandlingController extends GetxController {
     if (minutes > 0) parts.add('$minutes menit');
     if (seconds > 0) parts.add('$seconds detik');
 
-    if (hours == 0 && minutes == 0 && seconds == 0) {
-      return 'On Time';
+    if ((key == 'in' && negative) || (key == 'out' && !negative)) {
+      return Text(
+        'On Time',
+        style: TextStyle(
+            color: Colors.green, fontWeight: FontWeight.w600, fontSize: 12),
+      );
     }
-    return '${hours > 0 ? '${hours} ${hours > 1 ? 'hours' : 'hour'} ' : ''}${minutes > 0 ? '${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ' : ''}${seconds > 0 ? '${seconds} ${seconds > 1 ? 'seconds' : 'second'} ' : ''}${negative ? 'earlier' : 'late'}';
+    return Text(
+      '${hours > 0 ? '${hours} ${hours > 1 ? 'hours' : 'hour'} ' : ''}${minutes > 0 ? '${minutes} ${minutes > 1 ? 'minutes' : 'minute'} ' : ''}${seconds > 0 ? '${seconds} ${seconds > 1 ? 'seconds' : 'second'} ' : ''}${negative ? 'earlier' : 'late'}',
+      style: TextStyle(fontSize: 12),
+    );
   }
 
   Text getDifference(Map<String, dynamic> attendance, String key) {
-    final timestamp = attendance[key]?['timestamp'];
-    final scheduleTime = this.schedule?[key];
-    final difference = (timestamp != null && scheduleTime != null)
-        ? DateTime.parse(timestamp).difference(scheduleTime)
-        : null;
+    final String? timestampString = attendance[key]?['timestamp'];
+    final DateTime? timestamp =
+        timestampString != null ? DateTime.parse(timestampString) : null;
 
-    if (difference == null) {
+    if (timestamp == null || this.schedule == null) {
       return Text(
         '-',
         style: TextStyle(fontSize: 12),
       );
     }
 
-    final text = formatDuration(difference);
+    final Map<String, dynamic> scheduleTime =
+        this.schedule?[key] as Map<String, dynamic>;
 
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: 12,
-      ),
+    final DateTime scheduleToday = DateTime(
+      timestamp.year,
+      timestamp.month,
+      timestamp.day,
+      scheduleTime['hour']!,
+      scheduleTime['minute']!,
     );
+
+    final Duration difference = timestamp.difference(scheduleToday);
+
+    return formatDuration(difference, key);
   }
 
   Future<void> _attend(
@@ -239,14 +249,7 @@ class PageHandlingController extends GetxController {
     super.onInit();
     final scheduleDoc =
         await FirebaseFirestore.instance.collection('schedule').limit(1).get();
-    Map<String, dynamic>? schedule = scheduleDoc.docs.first.data();
-    DateTime now = DateTime.now();
-    this.schedule = <String, DateTime>{
-      'in': DateTime(now.year, now.month, now.day, schedule['in']['hour'],
-          schedule['in']['minute']),
-      'out': DateTime(now.year, now.month, now.day, schedule['out']['hour'],
-          schedule['out']['minute'])
-    };
+    this.schedule = scheduleDoc.docs.first.data();
     update();
   }
 }

@@ -131,6 +131,7 @@ class ProfileView extends GetView<ProfileController> {
               );
             }),
         bottomNavigationBar: ConvexAppBar(
+          backgroundColor: Color(0xFFEB7777),
           style: TabStyle.fixedCircle,
           items: [
             TabItem(icon: Icons.home, title: 'Home'),
