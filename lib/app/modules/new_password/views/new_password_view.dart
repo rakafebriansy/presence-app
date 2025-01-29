@@ -22,7 +22,11 @@ class NewPasswordView extends GetView<NewPasswordController> {
               controller: controller.passwordC,
               autocorrect: false,
               decoration: InputDecoration(
-                  labelText: 'New Password', border: OutlineInputBorder()),
+                labelText: 'New Password',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
             ),
             SizedBox(
               height: 20,
@@ -32,8 +36,11 @@ class NewPasswordView extends GetView<NewPasswordController> {
               controller: controller.confirmPasswordC,
               autocorrect: false,
               decoration: InputDecoration(
-                  labelText: 'Confirm New Password',
-                  border: OutlineInputBorder()),
+                labelText: 'Confirm New Password',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
             ),
             SizedBox(
               height: 30,

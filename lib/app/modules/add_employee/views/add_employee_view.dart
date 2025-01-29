@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:presence_app/app/helper/custom_styles.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 import '../controllers/add_employee_controller.dart';
 
@@ -21,7 +22,11 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
               autocorrect: false,
               controller: controller.identificationNumberC,
               decoration: InputDecoration(
-                  labelText: 'ID Number', border: OutlineInputBorder()),
+                labelText: 'ID Number',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
             ),
             SizedBox(
               height: 20,
@@ -30,7 +35,10 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
               autocorrect: false,
               controller: controller.nameC,
               decoration: InputDecoration(
-                  labelText: 'Name', border: OutlineInputBorder()),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  labelText: 'Name'),
             ),
             SizedBox(
               height: 20,
@@ -39,25 +47,70 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
               autocorrect: false,
               controller: controller.emailC,
               decoration: InputDecoration(
-                  labelText: 'Email', border: OutlineInputBorder()),
+                labelText: 'Email',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
             ),
             SizedBox(
               height: 20,
             ),
-            Obx(
-              () => DropdownButton<String>(
-                  value: controller.selectedJob.value,
+            Obx(() => DropdownButtonHideUnderline(
+                    child: DropdownButton2<String>(
                   items: [
-                    DropdownMenuItem(
-                        value: 'Lecturer', child: Text('Lecturer')),
-                    DropdownMenuItem(value: 'Student', child: Text('Student')),
+                    DropdownMenuItem<String>(
+                      value: 'Lecturer',
+                      child: Text(
+                        'Lecturer',
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w400),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: 'Student',
+                      child: Text(
+                        'Student',
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w400),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
-                  onChanged: (String? value) {
-                    if (value != null) {
-                      controller.selectedJob.value = value;
-                    }
-                  }),
-            ),
+                  value: controller.selectedJob.value,
+                  onChanged: (value) =>
+                      controller.selectedJob.value = value ?? 'Lecturer',
+                  buttonStyleData: ButtonStyleData(
+                    height: 53,
+                    width: 160,
+                    padding: const EdgeInsets.only(
+                      left: 14,
+                      right: 14,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.grey[600]!,
+                        width: 0.8,
+                      ),
+                    ),
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                    elevation: 1,
+                    maxHeight: 200,
+                    width: 200,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey[200]!, width: 1)),
+                    offset: const Offset(0, -5),
+                    scrollbarTheme: ScrollbarThemeData(
+                      radius: const Radius.circular(8),
+                      thickness: WidgetStatePropertyAll(6),
+                      thumbVisibility: WidgetStatePropertyAll(true),
+                    ),
+                  ),
+                ))),
             SizedBox(
               height: 30,
             ),
@@ -65,15 +118,24 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
               () => ElevatedButton(
                 onPressed: () {
                   Get.defaultDialog(
-                      title: 'ADD USER',
-                      middleText: 'Please make sure that you\'re an admin.',
-                      content: TextField(
-                        autocorrect: false,
-                        obscureText: true,
-                        controller: controller.adminPasswordC,
-                        decoration: InputDecoration(
+                      title: 'Please make sure that you\'re an admin.',
+                      titleStyle: TextStyle(
+                        fontSize: 18
+                      ),
+                      titlePadding: EdgeInsets.all(12),
+                      content: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: TextField(
+                          autocorrect: false,
+                          obscureText: true,
+                          controller: controller.adminPasswordC,
+                          decoration: InputDecoration(
                             labelText: 'Password',
-                            border: OutlineInputBorder()),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
                       ),
                       actions: [
                         OutlinedButton(

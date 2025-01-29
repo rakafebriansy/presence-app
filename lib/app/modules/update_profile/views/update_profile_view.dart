@@ -23,7 +23,11 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
               readOnly: true,
               controller: controller.emailC,
               decoration: InputDecoration(
-                  labelText: 'Email', border: OutlineInputBorder()),
+                labelText: 'Email',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
             ),
             SizedBox(
               height: 20,
@@ -32,7 +36,11 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
               autocorrect: false,
               controller: controller.nameC,
               decoration: InputDecoration(
-                  labelText: 'Name', border: OutlineInputBorder()),
+                labelText: 'Name',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
             ),
             SizedBox(
               height: 20,
@@ -41,7 +49,11 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
               autocorrect: false,
               controller: controller.identificationNumberC,
               decoration: InputDecoration(
-                  labelText: 'ID Number', border: OutlineInputBorder()),
+                labelText: 'ID Number',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
             ),
             SizedBox(
               height: 20,

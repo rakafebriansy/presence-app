@@ -22,7 +22,11 @@ class LoginView extends GetView<LoginController> {
               autocorrect: false,
               controller: controller.emailC,
               decoration: InputDecoration(
-                  labelText: "Email", border: OutlineInputBorder()),
+                labelText: "Email",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
             ),
             SizedBox(
               height: 20,
@@ -32,7 +36,11 @@ class LoginView extends GetView<LoginController> {
               controller: controller.passwordC,
               obscureText: true,
               decoration: InputDecoration(
-                  labelText: "Password", border: OutlineInputBorder()),
+                labelText: "Password",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
             ),
             SizedBox(
               height: 30,
@@ -51,17 +59,24 @@ class LoginView extends GetView<LoginController> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text('LOGGING IN'),
-                            SizedBox(width: 8,),
+                            SizedBox(
+                              width: 8,
+                            ),
                             SizedBox(
                               height: 10,
                               width: 10,
-                              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2,),
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
                             )
                           ],
                         ),
                   style: CustomStyles.primaryButton()),
             ),
-            TextButton(onPressed: () => Get.toNamed(Routes.FORGOT_PASSWORD), child: Text('Forgot Password?'))
+            TextButton(
+                onPressed: () => Get.toNamed(Routes.FORGOT_PASSWORD),
+                child: Text('Forgot Password?'))
           ],
         ));
   }

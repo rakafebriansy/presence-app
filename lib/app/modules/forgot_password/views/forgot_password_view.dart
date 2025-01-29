@@ -19,7 +19,11 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
             autocorrect: false,
             controller: controller.emailC,
             decoration: InputDecoration(
-                labelText: "Email", border: OutlineInputBorder()),
+              labelText: "Password",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
           ),
           SizedBox(
             height: 20,

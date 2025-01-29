@@ -30,10 +30,15 @@ class MyAttendancesView extends GetView<MyAttendancesController> {
                   child: Container(
                       width: 400,
                       height: 400,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16.0),
+                        color: Colors.amber,
+                      ),
                       child: SfDateRangePicker(
                         monthViewSettings:
                             DateRangePickerMonthViewSettings(firstDayOfWeek: 1),
                         selectionMode: DateRangePickerSelectionMode.range,
+                        selectionShape: DateRangePickerSelectionShape.rectangle,
                         showActionButtons: true,
                         onCancel: () => Get.back(),
                         onSubmit: (object) {

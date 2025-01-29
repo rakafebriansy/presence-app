@@ -48,6 +48,7 @@ dependencies:
   geolocator: ^13.0.2
   geocoding: ^3.0.0
   syncfusion_flutter_datepicker: ^27.2.3
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
