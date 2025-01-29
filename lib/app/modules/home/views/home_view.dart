@@ -13,7 +13,7 @@ class HomeView extends GetView<HomeController> {
   HomeView({super.key});
 
   final pageHandlingC = Get.find<PageHandlingController>();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -360,10 +360,16 @@ class HomeView extends GetView<HomeController> {
                                         pageHandlingC.getDifference(
                                             attendance, 'out');
                                     return Padding(
-                                      padding: EdgeInsets.only(left: 5, right: 5,bottom: 20),
+                                      padding: EdgeInsets.only(
+                                          left: 5, right: 5, bottom: 20),
                                       child: Material(
-                                        elevation: 2,
-                                        borderRadius: BorderRadius.circular(6),
+                                        elevation: 1,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            side: BorderSide(
+                                                width: 1,
+                                                color: Colors.grey[200]!)),
                                         color: Colors.white,
                                         child: InkWell(
                                           onTap: () {
@@ -375,11 +381,9 @@ class HomeView extends GetView<HomeController> {
                                               BorderRadius.circular(6),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(6),
-                                                border: Border.all(
-                                                    width: 1,
-                                                    color: Colors.grey[300]!)),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
                                             padding: EdgeInsets.all(20),
                                             child: Column(
                                               children: [

@@ -17,7 +17,10 @@ class MyAttendancesView extends GetView<MyAttendancesController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MY ATTENDANCES', style: TextStyle(fontWeight: FontWeight.w600),),
+        title: const Text(
+          'MY ATTENDANCES',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
         centerTitle: true,
         actions: [
           IconButton(
@@ -55,7 +58,7 @@ class MyAttendancesView extends GetView<MyAttendancesController> {
                     child: CircularProgressIndicator(),
                   );
                 }
-        
+
                 if (snapshot.hasData && snapshot.data?.docs.length != 0) {
                   return ListView.builder(
                       shrinkWrap: true,
@@ -71,8 +74,11 @@ class MyAttendancesView extends GetView<MyAttendancesController> {
                         return Padding(
                           padding: EdgeInsets.only(bottom: 20),
                           child: Material(
-                            elevation: 2,
-                            borderRadius: BorderRadius.circular(6),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(
+                                    width: 1, color: Colors.grey[200]!)),
+                            elevation: 1,
                             color: Colors.white,
                             child: InkWell(
                               onTap: () {
@@ -82,9 +88,8 @@ class MyAttendancesView extends GetView<MyAttendancesController> {
                               borderRadius: BorderRadius.circular(6),
                               child: Container(
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(
-                                        width: 1, color: Colors.grey[300]!)),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
                                 padding: EdgeInsets.all(20),
                                 child: Column(
                                   children: [
@@ -133,7 +138,7 @@ class MyAttendancesView extends GetView<MyAttendancesController> {
                         );
                       });
                 }
-        
+
                 return SizedBox(
                   height: 150,
                   child: Center(

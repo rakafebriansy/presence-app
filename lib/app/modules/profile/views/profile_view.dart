@@ -9,6 +9,22 @@ import 'package:presence_app/app/routes/app_pages.dart';
 
 import '../controllers/profile_controller.dart';
 
+class CurveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, size.height / 2);
+    path.quadraticBezierTo(
+        size.width / 2, size.height * 3 / 4, size.width, size.height / 2);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
 class ProfileView extends GetView<ProfileController> {
   ProfileView({super.key});
   final pageC = Get.find<PageHandlingController>();
@@ -16,10 +32,6 @@ class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('PROFILE'),
-          centerTitle: true,
-        ),
         body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             stream: controller.watchingUser(),
             builder: (context, snapshot) {
@@ -32,82 +44,167 @@ class ProfileView extends GetView<ProfileController> {
                 Map<String, dynamic>? user = snapshot.data!.data();
                 if (user != null) {
                   return ListView(
-                    padding: EdgeInsets.all(20),
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ClipOval(
-                            child: Container(
-                              width: 100,
-                              height: 100,
-                              child: Image.network(
-                                user['image'] != null && user['image'] != ''
-                                    ? user['image']
-                                    : 'https://ui-avatars.com/api/?name=${user['name']}',
-                                fit: BoxFit.cover,
+                      Container(
+                        height: 300,
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: ClipPath(
+                                clipper: CurveClipper(),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                              'assets/background.png'),
+                                          fit: BoxFit.cover)),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        '${user['name']}',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        '${user['email']}',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      ListTile(
-                        onTap: () => Get.toNamed(Routes.UPDATE_PROFILE),
-                        leading: Icon(Icons.person),
-                        title: Text('Update Profile'),
-                      ),
-                      ListTile(
-                        onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
-                        leading: Icon(Icons.vpn_key),
-                        title: Text('Update Password'),
-                      ),
-                      if (user['role'] == 'admin')
-                        ListTile(
-                          onTap: () {
-                            Get.toNamed(Routes.ADD_EMPLOYEE);
-                          },
-                          leading: Icon(Icons.person_add),
-                          title: Text('Add User'),
-                        ),
-                      ListTile(
-                        onTap: () {
-                          Get.defaultDialog(
-                              title: 'LOG OUT',
-                              middleText: 'Are you sure wan\'t to log out?',
-                              actions: [
-                                OutlinedButton(
-                                    onPressed: () => Get.back(),
-                                    child: Text('CANCEL')),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    if (controller.isLoading.isFalse) {
-                                      controller.logout();
-                                    }
-                                  },
-                                  child: Text('LOGOUT'),
-                                  style: CustomStyles.roundedPrimaryButton(),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ClipOval(
+                                      child: Container(
+                                        width: 100,
+                                        height: 100,
+                                        child: Image.network(
+                                          user['image'] != null &&
+                                                  user['image'] != ''
+                                              ? user['image']
+                                              : 'https://ui-avatars.com/api/?name=${user['name']}',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      '${user['name']}',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(
+                                      '${user['identification_number']}',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ],
                                 ),
-                              ]);
-                        },
-                        leading: Icon(Icons.logout),
-                        title: Text('Logout'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Card(
+                          elevation: 1,
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(
+                                  width: 1, color: Colors.grey[200]!)),
+                          child: ListView(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          color: Colors.grey[300]!,
+                                          width: 0.5)),
+                                ),
+                                child: ListTile(
+                                  onTap: () =>
+                                      Get.toNamed(Routes.UPDATE_PROFILE),
+                                  leading: Icon(Icons.person,
+                                      color: Color(0xFFEB7777)),
+                                  title: Text('Update Profile'),
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          color: Colors.grey[300]!,
+                                          width: 0.5)),
+                                ),
+                                child: ListTile(
+                                  onTap: () =>
+                                      Get.toNamed(Routes.UPDATE_PASSWORD),
+                                  leading: Icon(Icons.vpn_key,
+                                      color: Color(0xFFEB7777)),
+                                  title: Text('Update Password'),
+                                ),
+                              ),
+                              if (user['role'] == 'admin')
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey[300]!,
+                                            width: 0.5)),
+                                  ),
+                                  child: ListTile(
+                                    onTap: () {
+                                      Get.toNamed(Routes.ADD_EMPLOYEE);
+                                    },
+                                    leading: Icon(Icons.person_add,
+                                        color: Color(0xFFEB7777)),
+                                    title: Text('Add User'),
+                                  ),
+                                ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          color: Colors.grey[300]!,
+                                          width: 0.5)),
+                                ),
+                                child: ListTile(
+                                  onTap: () {
+                                    Get.defaultDialog(
+                                        title: 'LOG OUT',
+                                        middleText:
+                                            'Are you sure wan\'t to log out?',
+                                        actions: [
+                                          OutlinedButton(
+                                              onPressed: () => Get.back(),
+                                              child: Text('CANCEL')),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              if (controller
+                                                  .isLoading.isFalse) {
+                                                controller.logout();
+                                              }
+                                            },
+                                            child: Text('LOGOUT'),
+                                            style: CustomStyles
+                                                .roundedPrimaryButton(),
+                                          ),
+                                        ]);
+                                  },
+                                  leading: Icon(
+                                    Icons.logout,
+                                    color: Color(0xFFEB7777),
+                                  ),
+                                  title: Text('Logout'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   );
