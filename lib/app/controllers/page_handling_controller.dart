@@ -141,6 +141,8 @@ class PageHandlingController extends GetxController {
         Map<String, dynamic>? todayAttendanceData = todayAttendanceDoc.data();
         if (todayAttendanceData?['out'] == null) {
           Get.defaultDialog(
+              titleStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              titlePadding: EdgeInsets.only(top: 12, left: 12, right: 12),
               title: 'Checking out',
               middleText:
                   'Are you sure you want to record your attendance now?',
@@ -173,6 +175,8 @@ class PageHandlingController extends GetxController {
         }
       } else {
         Get.defaultDialog(
+            titleStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            titlePadding: EdgeInsets.only(top: 12, left: 12, right: 12),
             title: 'Checking in',
             middleText: 'Are you sure you want to record your attendance now?',
             actions: [

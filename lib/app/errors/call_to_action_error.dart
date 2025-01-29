@@ -23,6 +23,8 @@ class CallToActionError {
 
   dynamic getDialog() {
     Get.defaultDialog(
+        titleStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        titlePadding: EdgeInsets.only(top: 12, left: 12, right: 12),
         title: this.title,
         middleText: this.description,
         actions: [

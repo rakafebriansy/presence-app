@@ -175,6 +175,11 @@ class ProfileView extends GetView<ProfileController> {
                                 child: ListTile(
                                   onTap: () {
                                     Get.defaultDialog(
+                                        titleStyle: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                        titlePadding: EdgeInsets.only(
+                                            top: 12, left: 12, right: 12),
                                         title: 'LOG OUT',
                                         middleText:
                                             'Are you sure wan\'t to log out?',
