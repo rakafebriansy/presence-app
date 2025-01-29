@@ -144,14 +144,17 @@ class MyAttendancesView extends GetView<MyAttendancesController> {
                       });
                 }
 
-                return SizedBox(
-                  height: 150,
-                  child: Center(
-                    child: Text(
-                      'No data available.',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                return Column(
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          'No data available.',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 );
               });
         }),

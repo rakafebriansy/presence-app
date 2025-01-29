@@ -12,8 +12,8 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Add Employee'),
-          centerTitle: true,
+          title: const Text('ADD USER',
+          style: TextStyle(fontWeight: FontWeight.w600),),
         ),
         body: ListView(
           padding: EdgeInsets.all(20),

@@ -13,7 +13,10 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Update Profile'),
+          title: const Text(
+            'UPDATE PROFILE',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
           centerTitle: true,
         ),
         body: ListView(

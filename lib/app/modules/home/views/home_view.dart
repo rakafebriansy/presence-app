@@ -437,25 +437,33 @@ class HomeView extends GetView<HomeController> {
                           }
 
                           if (snapshot.hasError || snapshot.data == null) {
-                            return SizedBox(
-                              height: 150,
-                              child: Center(
-                                child: Text(
-                                  'Internal Server Error.',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                            return Column(
+                              children: [
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      'Internal Server Error.',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             );
                           }
 
-                          return SizedBox(
-                            height: 150,
-                            child: Center(
-                              child: Text(
-                                'No data available.',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                          return Column(
+                            children: [
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    'No data available.',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           );
                         })
                   ],

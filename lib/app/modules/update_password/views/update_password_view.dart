@@ -11,7 +11,10 @@ class UpdatePasswordView extends GetView<UpdatePasswordController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Update Password'),
+          title: const Text(
+            'UPDATE PASSWORD',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
           centerTitle: true,
         ),
         body: ListView(
