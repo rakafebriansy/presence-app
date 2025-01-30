@@ -34,7 +34,7 @@ class HomeController extends GetxController {
           .doc(uid)
           .collection('attendances')
           .orderBy('date', descending: true)
-          .limitToLast(5)
+          .limit(5)
           .snapshots();
     } on FirebaseException catch (error) {
       print(error);
