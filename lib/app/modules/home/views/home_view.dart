@@ -16,6 +16,7 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    double percentHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             future: controller.getUser(),
@@ -103,13 +104,29 @@ class HomeView extends GetView<HomeController> {
                                       SizedBox(
                                         height: 5,
                                       ),
-                                      Text(
-                                        user['identification_number'],
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.white),
-                                      ),
+                                      Flex(
+                                        direction: Axis.horizontal,
+                                        children: [
+                                          Text(
+                                            user['identification_number'],
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.white),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            '(${user['job']})',
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 10,
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      )
                                     ],
                                   ),
                                 )
@@ -452,18 +469,14 @@ class HomeView extends GetView<HomeController> {
                             );
                           }
 
-                          return Column(
-                            children: [
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    'No data available.',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
+                          return Container(
+                            height: percentHeight / 2,
+                            child: Center(
+                              child: Text(
+                                'No data available.',
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                            ],
+                            ),
                           );
                         })
                   ],
