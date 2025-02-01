@@ -245,7 +245,14 @@ class PageHandlingController extends GetxController {
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    return await Geolocator.getCurrentPosition();
+    final LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 30,
+    );
+
+    return await Geolocator.getCurrentPosition(
+      locationSettings: locationSettings
+    );
   }
 
   @override
