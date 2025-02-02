@@ -50,6 +50,7 @@ dependencies:
   syncfusion_flutter_datepicker: ^27.2.3
   dropdown_button2: ^2.3.9
   lottie: ^3.2.0
+  launcher_name: ^1.0.2
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,9 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/icon.jpeg"
   min_sdk_android: 21 # android min sdk min:16, default 21
+
+launcher_name:
+  default: "Presence App"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
