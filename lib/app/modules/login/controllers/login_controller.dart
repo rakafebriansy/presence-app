@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:presence_app/app/controllers/page_handling_controller.dart';
 import 'package:presence_app/app/errors/call_to_action_error.dart';
 import 'package:presence_app/app/errors/error_bags.dart';
 import 'package:presence_app/app/errors/validation_error.dart';
@@ -27,12 +28,6 @@ class LoginController extends GetxController with ErrorBags {
   }
 
   void login() async {
-      //     if (nameC.text.trim() == "") {
-      //   FlutterClipboard.copy(nameC.text).then((value) => print('copied text'));
-      // } else {
-      //   FlutterClipboard.copy(nameC.text).then((value) => print('copied text'));
-      // }
-      // return;
     this.isLoading.value = true;
     try {
       this.checkFormValidity();
@@ -62,6 +57,8 @@ class LoginController extends GetxController with ErrorBags {
       if (passwordC.text == 'password') {
         Get.offAllNamed(Routes.NEW_PASSWORD);
       } else {
+        final pageHandlingC = Get.find<PageHandlingController>();
+        pageHandlingC.pageIndex.value = 0;
         Get.offAllNamed(Routes.HOME);
       }
     } on FirebaseAuthException catch (error) {

@@ -4,6 +4,7 @@ import 'package:presence_app/app/errors/error_bags.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:presence_app/app/errors/validation_error.dart';
 import 'package:presence_app/app/helper/validators.dart';
+import 'package:presence_app/app/routes/app_pages.dart';
 
 class ForgotPasswordController extends GetxController with ErrorBags {
   RxBool isLoading = false.obs;
@@ -26,6 +27,7 @@ class ForgotPasswordController extends GetxController with ErrorBags {
 
       await FirebaseAuth.instance.setLanguageCode("en");
       await FirebaseAuth.instance.sendPasswordResetEmail(email: emailC.text);
+      Get.toNamed(Routes.LOGIN);
       Get.snackbar(
           'Successfully sent password reset email!', 'Check your email inbox.');
     } on FirebaseAuthException catch (error) {
@@ -42,7 +44,6 @@ class ForgotPasswordController extends GetxController with ErrorBags {
       Get.snackbar('Internal Server Error!', 'Contact our customer service.');
     } finally {
       this.isLoading.value = false;
-      Get.back();
     }
   }
 

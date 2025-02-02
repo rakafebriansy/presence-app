@@ -79,6 +79,28 @@ class HomeView extends GetView<HomeController> {
                                     child: Image.network(
                                       user!['image'] ??
                                           'https://ui-avatars.com/api/?name=${user['name']}',
+                                      loadingBuilder: (BuildContext context,
+                                          Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    (loadingProgress
+                                                            .expectedTotalBytes ??
+                                                        1)
+                                                : null,
+                                            strokeWidth:
+                                                2,
+                                          ),
+                                        );
+                                      },
                                       fit: BoxFit.cover,
                                     ),
                                   ),

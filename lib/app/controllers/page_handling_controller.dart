@@ -251,8 +251,7 @@ class PageHandlingController extends GetxController {
     );
 
     return await Geolocator.getCurrentPosition(
-      locationSettings: locationSettings
-    );
+        locationSettings: locationSettings);
   }
 
   @override
