@@ -16,6 +16,7 @@ class UpdateProfileController extends GetxController with ErrorBags {
   late TextEditingController emailC;
   late TextEditingController identificationNumberC;
   String? image;
+  String? role;
 
   XFile? pickedImage;
 
@@ -136,6 +137,7 @@ class UpdateProfileController extends GetxController with ErrorBags {
         this.emailC.text = data['email'];
         this.identificationNumberC.text = data['identification_number'];
         this.image = data['image'] ?? null;
+        this.role = data['role'] ?? null;
         update();
         return;
       }

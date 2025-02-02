@@ -49,6 +49,7 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
               height: 20,
             ),
             TextField(
+              readOnly: controller.role != 'admin',
               autocorrect: false,
               controller: controller.identificationNumberC,
               decoration: InputDecoration(

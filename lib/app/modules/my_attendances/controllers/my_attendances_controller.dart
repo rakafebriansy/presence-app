@@ -5,7 +5,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class MyAttendancesController extends GetxController {
   DateTime? start;
-  DateTime end = DateTime.now();
+  DateTime? end;
 
   Future<QuerySnapshot<Map<String, dynamic>>> getAttendances() async {
     try {
@@ -13,13 +13,20 @@ class MyAttendancesController extends GetxController {
       Query<Map<String, dynamic>> query = FirebaseFirestore.instance
           .collection('employees')
           .doc(uid)
-          .collection('attendances')
-          .where('date',
-              isLessThan: this.end.add(Duration(days: 1)).toIso8601String());
+          .collection('attendances');
       if (start != null) {
         query =
             query.where('date', isGreaterThan: this.start!.toIso8601String());
+        if (end != null) {
+          query = query.where('date',
+              isLessThan: this.end!.add(Duration(days: 1)).toIso8601String());
+        } else {
+          query = query.where('date',
+              isLessThan: this.start!.add(Duration(days: 1)).toIso8601String());
+        }
       }
+      this.start = null;
+      this.end = null;
       return await query.orderBy('date', descending: true).get();
     } on FirebaseException catch (error) {
       print(error);

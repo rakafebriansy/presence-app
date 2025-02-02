@@ -11,6 +11,7 @@ class LoginController extends GetxController with ErrorBags {
   RxBool isLoading = false.obs;
   late TextEditingController emailC;
   late TextEditingController passwordC;
+  RxBool isHidden = true.obs;
 
   @override
   void checkFormValidity() {
@@ -26,6 +27,12 @@ class LoginController extends GetxController with ErrorBags {
   }
 
   void login() async {
+      //     if (nameC.text.trim() == "") {
+      //   FlutterClipboard.copy(nameC.text).then((value) => print('copied text'));
+      // } else {
+      //   FlutterClipboard.copy(nameC.text).then((value) => print('copied text'));
+      // }
+      // return;
     this.isLoading.value = true;
     try {
       this.checkFormValidity();

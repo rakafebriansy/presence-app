@@ -10,6 +10,8 @@ class NewPasswordController extends GetxController with ErrorBags {
   RxBool isLoading = false.obs;
   late TextEditingController passwordC;
   late TextEditingController confirmPasswordC;
+  RxBool isHidden = true.obs;
+  RxBool isConfirmHidden = true.obs;
 
   void setPassword() async {
     this.isLoading.value = true;

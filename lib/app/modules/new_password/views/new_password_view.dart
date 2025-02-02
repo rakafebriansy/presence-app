@@ -26,29 +26,43 @@ class NewPasswordView extends GetView<NewPasswordController> {
           SizedBox(
             height: 15,
           ),
-          TextField(
-            obscureText: true,
-            controller: controller.passwordC,
-            autocorrect: false,
-            decoration: InputDecoration(
-              labelText: 'New Password',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+          Obx(
+            () => TextField(
+              obscureText: controller.isHidden.value,
+              controller: controller.passwordC,
+              autocorrect: false,
+              decoration: InputDecoration(
+                  labelText: 'New Password',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  suffixIcon: IconButton(
+                      onPressed: () => controller.isHidden.value =
+                          !controller.isHidden.value,
+                      icon: Icon(controller.isHidden.value
+                          ? Icons.visibility_off
+                          : Icons.visibility))),
             ),
           ),
           SizedBox(
             height: 20,
           ),
-          TextField(
-            obscureText: true,
-            controller: controller.confirmPasswordC,
-            autocorrect: false,
-            decoration: InputDecoration(
-              labelText: 'Confirm New Password',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+          Obx(
+            () => TextField(
+              obscureText: controller.isConfirmHidden.value,
+              controller: controller.confirmPasswordC,
+              autocorrect: false,
+              decoration: InputDecoration(
+                  labelText: 'Confirm New Password',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  suffixIcon: IconButton(
+                      onPressed: () => controller.isConfirmHidden.value =
+                          !controller.isConfirmHidden.value,
+                      icon: Icon(controller.isConfirmHidden.value
+                          ? Icons.visibility_off
+                          : Icons.visibility))),
             ),
           ),
           SizedBox(

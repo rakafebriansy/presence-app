@@ -20,43 +20,64 @@ class UpdatePasswordView extends GetView<UpdatePasswordController> {
         body: ListView(
           padding: EdgeInsets.all(20),
           children: [
-            TextField(
-              autocorrect: false,
-              obscureText: true,
-              controller: controller.currentPasswordC,
-              decoration: InputDecoration(
-                labelText: 'Current Password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+            Obx(
+              () => TextField(
+                autocorrect: false,
+                obscureText: controller.isHidden.value,
+                controller: controller.currentPasswordC,
+                decoration: InputDecoration(
+                    labelText: 'Current Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    suffixIcon: IconButton(
+                        onPressed: () => controller.isHidden.value =
+                            !controller.isHidden.value,
+                        icon: Icon(controller.isHidden.value
+                            ? Icons.visibility_off
+                            : Icons.visibility))),
               ),
             ),
             SizedBox(
               height: 20,
             ),
-            TextField(
-              autocorrect: false,
-              obscureText: true,
-              controller: controller.newPasswordC,
-              decoration: InputDecoration(
-                labelText: 'New Password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+            Obx(
+              () => TextField(
+                autocorrect: false,
+                obscureText: controller.isNewHidden.value,
+                controller: controller.newPasswordC,
+                decoration: InputDecoration(
+                    labelText: 'New Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    suffixIcon: IconButton(
+                        onPressed: () => controller.isNewHidden.value =
+                            !controller.isNewHidden.value,
+                        icon: Icon(controller.isNewHidden.value
+                            ? Icons.visibility_off
+                            : Icons.visibility))),
               ),
             ),
             SizedBox(
               height: 20,
             ),
-            TextField(
-              autocorrect: false,
-              obscureText: true,
-              controller: controller.confirmNewPasswordC,
-              decoration: InputDecoration(
-                labelText: 'Confirm New Password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+            Obx(
+              () => TextField(
+                autocorrect: false,
+                obscureText: controller.isConfirmHidden.value,
+                controller: controller.confirmNewPasswordC,
+                decoration: InputDecoration(
+                    labelText: 'Confirm New Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    suffixIcon: IconButton(
+                        onPressed: () => controller.isConfirmHidden.value =
+                            !controller.isConfirmHidden.value,
+                        icon: Icon(controller.isConfirmHidden.value
+                            ? Icons.visibility_off
+                            : Icons.visibility))),
               ),
             ),
             SizedBox(

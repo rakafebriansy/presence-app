@@ -112,7 +112,11 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
                   ),
                 ))),
             SizedBox(
-              height: 30,
+              height: 10,
+            ),
+            Text('default password: password', style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic)),
+            SizedBox(
+              height: 20,
             ),
             Obx(
               () => ElevatedButton(

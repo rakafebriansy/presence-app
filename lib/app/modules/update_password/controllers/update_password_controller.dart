@@ -10,6 +10,9 @@ class UpdatePasswordController extends GetxController with ErrorBags {
   late TextEditingController currentPasswordC;
   late TextEditingController newPasswordC;
   late TextEditingController confirmNewPasswordC;
+  RxBool isHidden = true.obs;
+  RxBool isNewHidden = true.obs;
+  RxBool isConfirmHidden = true.obs;
 
   @override
   void checkFormValidity() {
