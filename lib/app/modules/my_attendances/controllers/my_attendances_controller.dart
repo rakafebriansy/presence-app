@@ -4,8 +4,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class MyAttendancesController extends GetxController {
-  DateTime? start;
-  DateTime? end;
+  Rxn<DateTime> start = Rxn<DateTime>();
+  Rxn<DateTime?> end = Rxn<DateTime>();
+
+  late Future<QuerySnapshot<Map<String, dynamic>>> attendancesFuture;
+
+  @override
+  void onInit() {
+    super.onInit();
+    this.start.value = null;
+    this.end.value = null;
+    _loadAttendances();
+  }
+
+  void _loadAttendances() {
+    attendancesFuture = getAttendances();
+    update();
+  }
 
   Future<QuerySnapshot<Map<String, dynamic>>> getAttendances() async {
     try {
@@ -14,19 +29,19 @@ class MyAttendancesController extends GetxController {
           .collection('employees')
           .doc(uid)
           .collection('attendances');
-      if (start != null) {
-        query =
-            query.where('date', isGreaterThan: this.start!.toIso8601String());
-        if (end != null) {
+      if (start.value != null) {
+        query = query.where('date',
+            isGreaterThan: this.start.value!.toIso8601String());
+        if (end.value != null) {
           query = query.where('date',
-              isLessThan: this.end!.add(Duration(days: 1)).toIso8601String());
+              isLessThan:
+                  this.end.value!.add(Duration(days: 1)).toIso8601String());
         } else {
           query = query.where('date',
-              isLessThan: this.start!.add(Duration(days: 1)).toIso8601String());
+              isLessThan:
+                  this.start.value!.add(Duration(days: 1)).toIso8601String());
         }
       }
-      this.start = null;
-      this.end = null;
       return await query.orderBy('date', descending: true).get();
     } on FirebaseException catch (error) {
       print(error);
@@ -39,11 +54,24 @@ class MyAttendancesController extends GetxController {
   }
 
   void sortAttendancesByDate(PickerDateRange object) {
-    this.start = object.startDate;
-    if (object.endDate != null) {
-      this.end = object.endDate!;
+    try {
+      this.start.value = object.startDate;
+      if (object.endDate != null) {
+        this.end.value = object.endDate!;
+      }
+      _loadAttendances();
+      if (Get.isDialogOpen ?? false || Get.isSnackbarOpen) {
+        Get.back();
+      }
+    } catch (error) {
+      Get.snackbar('Failed to load data!', error.toString());
+      throw Exception('An unexpected error occurred: $error');
     }
-    update();
-    Get.back();
+  }
+
+  void resetSortAttendances() {
+    this.start.value = null;
+    this.end.value = null;
+    _loadAttendances();
   }
 }

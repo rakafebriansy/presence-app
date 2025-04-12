@@ -72,7 +72,7 @@ class ProfileView extends GetView<ProfileController> {
                                         width: 100,
                                         height: 100,
                                         child: Image.network(
-                                          user!['image'] ??
+                                          user['image'] ??
                                               'https://ui-avatars.com/api/?name=${user['name']}',
                                           loadingBuilder: (BuildContext context,
                                               Widget child,

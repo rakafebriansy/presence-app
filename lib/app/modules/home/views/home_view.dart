@@ -242,7 +242,7 @@ class HomeView extends GetView<HomeController> {
                                                         (context, snapshot) {
                                                       String address = snapshot
                                                               .data ??
-                                                          'Belum menemukan lokasi';
+                                                          'Haven\'t found your location yet.';
                                                       return Text(
                                                         address,
                                                         style: TextStyle(

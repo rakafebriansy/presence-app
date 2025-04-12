@@ -23,6 +23,17 @@ class MyAttendancesView extends GetView<MyAttendancesController> {
         ),
         centerTitle: true,
         actions: [
+          Obx(() {
+            if (controller.start.value != null)
+              return GestureDetector(
+                onTap: () {
+                  controller.resetSortAttendances();
+                },
+                child: Icon(Icons.close),
+              );
+            else
+              return SizedBox.shrink();
+          }),
           IconButton(
             icon: Icon(Icons.filter_alt),
             onPressed: () {
@@ -56,7 +67,7 @@ class MyAttendancesView extends GetView<MyAttendancesController> {
         padding: EdgeInsets.symmetric(horizontal: 15),
         child: GetBuilder<MyAttendancesController>(builder: (c) {
           return FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              future: c.getAttendances(),
+              future: c.attendancesFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -67,7 +78,7 @@ class MyAttendancesView extends GetView<MyAttendancesController> {
                 if (snapshot.hasData && snapshot.data?.docs.length != 0) {
                   return ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      // physics: NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data?.docs.length,
                       itemBuilder: (ctx, i) {
                         Map<String, dynamic> attendance =
